@@ -18,13 +18,13 @@
 	<a href="#license">License</a>
 <br />
 <br />
-<img src='images/pipeline.jpg' height=400>
+<img src='images/flashcards.png' height=400>
 </p>
 
 
 ## Description
 
-This project was created with the initial purpose of learning to scrape 'messy' data and clean it through a pipeline of functions automatically.  Some features may not be implemented perfectly, or be missing entirely.  Clean, functional, decoupled code is the main purpose of this project, along with learning how to implement traditional relational databases and NoSQL databases.
+This is a flash card interface, used for interview questions currently.
 
 
 ## Features
