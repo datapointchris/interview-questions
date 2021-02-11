@@ -58,10 +58,3 @@ except IndexError:
     print('CONGRATULATIONS!!!')
     print('Answered All Questions!!')
     print('Are you employed yet???')
-
-# TODO: #12 Test editor todo
-# Test completed
-# Fixed
-
-# TODO: #13 Assing to self @datapointchris
-# Fixed
