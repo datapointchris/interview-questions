@@ -59,3 +59,7 @@ except IndexError:
     print('Answered All Questions!!')
     print('Are you employed yet???')
 
+options_menu = {
+    1: 'get_a_new_question',
+    2: 'get_a_new_question',
+}
