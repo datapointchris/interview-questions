@@ -61,9 +61,16 @@ except IndexError:
 
 # TODO: #20 Add option menu @DataPointChris
 
+option_menu = ['bullshit']
+
+# TODO: Another thing
+
+# FIXME: Big Bug here
+
+# BUG: Broken shit
 
 
-
+# This menu sucks
 options_menu = {
     1: 'get_a_new_question',
     2: 'add_a_new_question',
