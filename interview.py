@@ -59,7 +59,7 @@ except IndexError:
     print('Answered All Questions!!')
     print('Are you employed yet???')
 
-
+# TODO: #20 Add option menu @DataPointChris
 
 
 
