@@ -61,5 +61,5 @@ except IndexError:
 
 options_menu = {
     1: 'get_a_new_question',
-    2: 'get_a_new_question',
+    2: 'add_a_new_question',
 }
