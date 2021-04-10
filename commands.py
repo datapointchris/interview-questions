@@ -6,175 +6,192 @@ class QuitCommand():
         sys.exit()
 
 
-# CREATE TABLES
-
-
-class CreateTableJobs():
-    def execute(self, data=None):
+class Jobs():
+    def create_table(self, data=None):
         db.create_table('jobs', {
             'id': 'integer primary key autoincrement',
             'job': 'text not null',
         })
 
+    def drop_table():
+        pass
 
-class CreateTableQuestions():
-    def execute(self, data=None):
+    def view():
+        pass
+
+    def view_reviewed():
+        pass
+
+    def view_not_reviewed():
+        pass
+
+    def view_all():
+        pass
+    
+    def add():
+        pass
+
+    def edit():
+        pass
+    
+    def delete():
+        pass
+    
+    def delete_all():
+        pass
+    
+    def reset():
+        pass
+
+
+class Questions():
+    def create_table(self, data=None):
         db.create_table('questions', {
             'id': 'integer primary key autoincrement',
             'question': 'text not null',
         })
 
+    def drop_table():
+        pass
 
-class CreateTableAnswers():
-    def execute(self, data=None):
+    def view():
+        pass
+
+    def view_answered():
+        pass
+
+    def view_not_answered():
+        pass
+
+    def view_all():
+        pass
+    
+    def add():
+        pass
+
+    def edit():
+        pass
+    
+    def delete():
+        pass
+    
+    def delete_all():
+        pass
+    
+    def reset():
+        pass
+
+
+# ANSWERS
+
+class Answers():
+    def create_table(self, data=None):
         db.create_table('answers', {
             'id': 'integer primary key autoincrement',
             'answer': 'text not null',
         })
+    def drop_table():
+        pass
+
+    def view():
+        pass
+
+    def view_all():
+        pass
+    
+    def add():
+        pass
+
+    def edit():
+        pass
+    
+    def delete():
+        pass
+    
+    def delete_all():
+        pass
+    
+    def reset():
+        pass
 
 
-class CreateTableTips():
-    def execute(self, data=None):
+
+# TIPS
+
+class Tips():
+    def create_table(self, data=None):
         db.create_table('tips', {
             'id': 'integer primary key autoincrement',
             'tip': 'text not null',
         })
+    def drop_table():
+        pass
+
+    def view():
+        pass
+
+    def view_reviewed():
+        pass
+
+    def view_not_reviewed():
+        pass
+
+    def view_all():
+        pass
+    
+    def add():
+        pass
+
+    def edit():
+        pass
+    
+    def delete():
+        pass
+    
+    def delete_all():
+        pass
+    
+    def reset():
+        pass
 
 
-class CreateTableNotes():
-    def execute(self, data=None):
+
+# NOTES
+
+class Notes():
+    def create_table(self, data=None):
         db.create_table('notes', {
             'id': 'integer primary key autoincrement',
             'note': 'text not null',
         })
 
+    def drop_table():
+        pass
 
+    def view():
+        pass
 
-# QUESTIONS
+    def view_reviewed():
+        pass
 
-class AddQuestion():
-    def execute(self, data):
-        pass 
+    def view_not_reviewed():
+        pass
 
+    def view_all():
+        pass
+    
+    def add():
+        pass
 
-class DeleteQuestion():
-    def execute(self, data):
-        pass 
+    def edit():
+        pass
+    
+    def delete():
+        pass
+    
+    def delete_all():
+        pass
+    
+    def reset():
+        pass
 
-
-class DeleteAllQuestions():
-    def execute(self, data):
-        pass 
-
-
-class ResetQuestions():
-    def execute(self, data):
-        pass 
-
-
-class EditQuestion():
-    def execute(self, data):
-        pass 
-
-
-class ViewAllQuestions():
-    def execute(self, data):
-        pass 
-
-
-class ViewAnsweredQuestions():
-    def execute(self, data):
-        pass 
-
-
-class ViewUnansweredQuestions():
-    def execute(self, data):
-        pass 
-
-# ANSWERS
-
-class ViewAnswer():
-    def execute(self, data):
-        pass 
-
-
-class AddAnswer():
-    def execute(self, data):
-        pass 
-
-
-class EditAnswer():
-    def execute(self, data):
-        pass 
-
-
-class DeleteAnswer():
-    def execute(self, data):
-        pass 
-
-
-class DeleteAllAnswers():
-    def execute(self, data):
-        pass 
-
-# TIPS
-
-class ViewTips():
-    def execute(self, data):
-        pass 
-
-
-class AddTip():
-    def execute(self, data):
-        pass 
-
-
-class EditTip():
-    def execute(self, data):
-        pass 
-
-
-class DeleteTip():
-    def execute(self, data):
-        pass 
-
-
-class DeleteAllTips():
-    def execute(self, data):
-        pass 
-
-
-class ResetTips():
-    def execute(self, data):
-        pass 
-
-# NOTES
-
-class ViewNotes():
-    def execute(self, data):
-        pass 
-
-
-class AddNote():
-    def execute(self, data):
-        pass 
-
-
-class EditNote():
-    def execute(self, data):
-        pass 
-
-
-class DeleteNote():
-    def execute(self, data):
-        pass 
-
-
-class DeleteAllNotes():
-    def execute(self, data):
-        pass 
-
-
-class ResetNotes():
-    def execute(self, data):
-        pass 
