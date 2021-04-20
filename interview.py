@@ -1,4 +1,22 @@
 import random
+import commands
+
+jobs = commands.Jobs(table_name='jobs')
+jobs.create_table()
+
+questions = commands.Questions(table_name='questions')
+questions.create_table()
+
+answers = commands.Answers(table_name='answers')
+answers.create_table()
+
+tips = commands.Tips(table_name='tips')
+tips.create_table()
+
+notes = commands.Notes(table_name='notes')
+notes.create_table()
+
+
 
 questions = {
     'Q01': 'Tell me about yourself.',
@@ -59,3 +77,24 @@ except IndexError:
     print('Answered All Questions!!')
     print('Are you employed yet???')
 
+def print_options(options_type):
+    print(*options_type)
+
+options = {
+    '1': ('Get a Random Job and Questions', commands.()),
+    'J': ('View Jobs', commands.Jobs.view_all()),
+    'Q': ('View Questions', commands.Jobs.view()),
+    'A': ('View Answers', commands.Jobs.add()),
+    'T': ('View Tips', commands.Jobs.edit()),
+    'N': ('View Notes', commands.Jobs.delete()),
+}
+
+jobs_options = {
+    'A': ('View Jobs', commands.Jobs.view_all()),
+    'B': ('View a Specific Job by ID', commands.Jobs.view()),
+    'C': ('Add a Job', commands.Jobs.add()),
+    'D': ('Edit a Job', commands.Jobs.edit()),
+    'E': ('Delete a Job', commands.Jobs.delete()),
+    'F': ('Delete All Jobs', commands.Jobs.delete_all()),
+    'G': ('Reset Jobs to Default', commands.Jobs.reset()),
+}
