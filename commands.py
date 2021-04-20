@@ -4,6 +4,9 @@ from datetime import datetime
 
 db = DatabaseManager('interview.db')
 
+class QuitCommand():
+    def execute(self, data=None):
+        sys.exit()
 
 class BaseTable():
     '''Base class for handling all common table functions'''
