@@ -1,61 +1,65 @@
-# MAIN OPTIONS
+from database import DatabaseManager
+from datetime import datetime
 
 
-class QuitCommand():
-    def execute(self, data=None):
-        sys.exit()
+db = DatabaseManager('interview.db')
 
 
-class Jobs():
-    def create_table(self, data=None):
-        db.create_table('jobs', {
-            'id': 'integer primary key autoincrement',
-            'job': 'text not null',
-        })
+class BaseTable():
+    '''Base class for handling all common table functions'''
+
+    def __init__(self, table_name):
+        self.table_name = table_name
 
     def drop_table():
-        pass
+        db.drop_table(self.table_name)
 
-    def view():
-        pass
-
-    def view_reviewed():
-        pass
-
-    def view_not_reviewed():
-        pass
+    def view(criteria):
+        db.select(self.table_name, criteria=criteria)
 
     def view_all():
-        pass
-    
-    def add():
-        pass
+        db.select(self.table_name, criteria=criteria)
 
-    def edit():
-        pass
-    
+    def add(data):
+        db.add(self.table_name, data)
+
+    def edit(criteria):
+        db.update(self.table_name, data)
+
     def delete():
-        pass
-    
+        db.delete()
+
     def delete_all():
-        pass
-    
+        db.delete()
+
     def reset():
         pass
 
 
+class Jobs():
+
+    def create_table(self, data=None):
+        db.create_table('jobs', {
+            'id': 'integer primary key autoincrement',
+            'job': 'text not null',
+            'date_added': 'text'
+        })
+
+    def view_practiced():
+        db.select('jobs', criteria={'reviewed': True})
+
+    def view_not_practiced():
+        db.select('jobs', criteria={'reviewed': False})
+
+
 class Questions():
+
     def create_table(self, data=None):
         db.create_table('questions', {
             'id': 'integer primary key autoincrement',
             'question': 'text not null',
+            'answered': 'integer'
         })
-
-    def drop_table():
-        pass
-
-    def view():
-        pass
 
     def view_answered():
         pass
@@ -63,26 +67,6 @@ class Questions():
     def view_not_answered():
         pass
 
-    def view_all():
-        pass
-    
-    def add():
-        pass
-
-    def edit():
-        pass
-    
-    def delete():
-        pass
-    
-    def delete_all():
-        pass
-    
-    def reset():
-        pass
-
-
-# ANSWERS
 
 class Answers():
     def create_table(self, data=None):
@@ -90,33 +74,7 @@ class Answers():
             'id': 'integer primary key autoincrement',
             'answer': 'text not null',
         })
-    def drop_table():
-        pass
 
-    def view():
-        pass
-
-    def view_all():
-        pass
-    
-    def add():
-        pass
-
-    def edit():
-        pass
-    
-    def delete():
-        pass
-    
-    def delete_all():
-        pass
-    
-    def reset():
-        pass
-
-
-
-# TIPS
 
 class Tips():
     def create_table(self, data=None):
@@ -124,39 +82,7 @@ class Tips():
             'id': 'integer primary key autoincrement',
             'tip': 'text not null',
         })
-    def drop_table():
-        pass
 
-    def view():
-        pass
-
-    def view_reviewed():
-        pass
-
-    def view_not_reviewed():
-        pass
-
-    def view_all():
-        pass
-    
-    def add():
-        pass
-
-    def edit():
-        pass
-    
-    def delete():
-        pass
-    
-    def delete_all():
-        pass
-    
-    def reset():
-        pass
-
-
-
-# NOTES
 
 class Notes():
     def create_table(self, data=None):
@@ -165,33 +91,5 @@ class Notes():
             'note': 'text not null',
         })
 
-    def drop_table():
-        pass
-
-    def view():
-        pass
-
-    def view_reviewed():
-        pass
-
-    def view_not_reviewed():
-        pass
-
-    def view_all():
-        pass
-    
-    def add():
-        pass
-
-    def edit():
-        pass
-    
-    def delete():
-        pass
-    
-    def delete_all():
-        pass
-    
-    def reset():
-        pass
-
+    def view_notes(self, criteria=None):
+        db.select(self.table_name, criteria=question_id)
