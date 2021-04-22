@@ -51,10 +51,10 @@ class Jobs(BaseTable):
             'date_added': 'text'
         })
 
-    def view_practiced():
+    def view_practiced(self):
         db.select('jobs', criteria={'reviewed': True})
 
-    def view_not_practiced():
+    def view_not_practiced(self):
         db.select('jobs', criteria={'reviewed': False})
 
 

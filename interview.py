@@ -1,5 +1,11 @@
 import random
 import commands
+from collections import namedtuple
+import os
+
+def clear_screen():
+    clear = 'cls' if os.name == 'nt' else 'clear'
+    os.system(clear)
 
 jobs = commands.Jobs(table_name='jobs')
 jobs.create_table()
@@ -56,45 +62,104 @@ questions = {
     'Q35': 'What can you offer us that other candidates cannot?',
 }
 
-try:
-    with open('answered.txt', 'r') as ans:
-        answered = ans.read().splitlines()
-except Exception as e:
-    print(e)
-    answered = []
+# try:
+#     with open('answered.txt', 'r') as ans:
+#         answered = ans.read().splitlines()
+# except Exception as e:
+#     print(e)
+#     answered = []
 
-not_answered = [q for q in questions.keys() if q not in answered]
+# not_answered = [q for q in questions.keys() if q not in answered]
 
-try:
-    selected = random.choice(not_answered)
-    print(selected + ':')
-    print(questions[selected])
+# try:
+#     selected = random.choice(not_answered)
+#     print(selected + ':')
+#     print(questions[selected])
 
-    with open('answered.txt', 'a') as ans:
-        ans.write(f'\n{selected}')
-except IndexError:
-    print('CONGRATULATIONS!!!')
-    print('Answered All Questions!!')
-    print('Are you employed yet???')
+#     with open('answered.txt', 'a') as ans:
+#         ans.write(f'\n{selected}')
+# except IndexError:
+#     print('CONGRATULATIONS!!!')
+#     print('Answered All Questions!!')
+#     print('Are you employed yet???')
 
-def print_options(options_type):
-    print(*options_type)
 
-options = {
-    '1': ('Get a Random Job and Questions', commands.()),
-    'J': ('View Jobs', commands.Jobs.view_all()),
-    'Q': ('View Questions', commands.Jobs.view()),
-    'A': ('View Answers', commands.Jobs.add()),
-    'T': ('View Tips', commands.Jobs.edit()),
-    'N': ('View Notes', commands.Jobs.delete()),
+class Option:
+    def __init__(self, name, command, data):
+        self.name = name
+        self.command = command
+        self.data = data
+
+    def select(self):
+        if self.data is not None:
+            self.command(self.data)
+        else:
+            self.command()
+
+class MainMenu:
+    def __init__(self):
+        pass
+
+    def practice(self):
+        # Get random job and questions
+        # jobs.view(random_job)
+        # questions.view(random_3_questions)
+        pass
+
+    def practice_not_practiced(self):
+        # Select from jobs not practiced
+        pass
+
+main = MainMenu()
+    
+def print_menu(selected_menu):
+    # clear_screen()
+    submenu = menus.get(selected_menu, 'main')
+    for key, option in submenu.items():
+        print(f'{key} : {option.name}')
+        print()
+
+def select_option(selected):
+    choice = input('Choose')
+    new_menu = menu[selected]
+    return print_options(new_menu)
+
+
+menus = {
+'main': {
+        '1': Option('Get a Random Job and Questions', main.practice, None), # TODO: Create get_random function
+        'J': Option('View Jobs Options', print_menu, 'jobs'),
+        'Q': Option('View Questions Options', 'questions', None),
+        'A': Option('View Answers Options', 'answers', None),
+        'T': Option('View Tips Options', 'tips', None),
+        'N': Option('View Notes Options', 'notes', None),
+    },
+'jobs': {
+    'A': Option('View Jobs Listing', jobs.view_all, None),
+    'B': Option('View a Specific Job by ID', jobs.view, None),
+    'C': Option('Add a Job', jobs.add, None),
+    'D': Option('Edit a Job', jobs.edit, None),
+    'E': Option('Delete a Job', jobs.delete, None),
+    'F': Option('Delete All Jobs', jobs.delete_all, None),
+    'G': Option('Reset Jobs to Default', jobs.reset, None),
+    'M': Option('Return to Main Menu', print_menu, 'main'),
 }
+ }
 
-jobs_options = {
-    'A': ('View Jobs', commands.Jobs.view_all()),
-    'B': ('View a Specific Job by ID', commands.Jobs.view()),
-    'C': ('Add a Job', commands.Jobs.add()),
-    'D': ('Edit a Job', commands.Jobs.edit()),
-    'E': ('Delete a Job', commands.Jobs.delete()),
-    'F': ('Delete All Jobs', commands.Jobs.delete_all()),
-    'G': ('Reset Jobs to Default', commands.Jobs.reset()),
-}
+
+
+def choose_command(submenu):
+    choice = input('Choose command: ')
+    new_menu = menus.get(submenu, 'main')
+    return new_menu[choice].select()
+
+# newmenu = menus.get('main')
+
+# for key, option in newmenu.items():
+#     print(key, option[0])
+
+my_chosen_option = menus['main'].get('J')
+
+my_chosen_option.select()
+
+print_menu('jobs')
