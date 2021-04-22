@@ -198,14 +198,19 @@ def choose_command(submenu):
 # MAIN PROGRAM
 # To Start
 current_menu = 'main'
+print()
+print('---------- MAIN MENU ----------')
+print()
 print_menu(current_menu)
 
 while True:
 
-    print(f'Current menu: {current_menu}')
+    print()
+    # print(f'Current menu: {current_menu}')
     chosen_command = choose_command(current_menu)
-    print('########## YOUR CHOSEN OPTION ##########')
     print()
     current_menu = chosen_command.select()
-    print(f'New Current menu: {current_menu}')
+    print()
+    print(f'---------- {current_menu.upper()} MENU ----------')
+    print()
     print_menu(current_menu)
