@@ -9,22 +9,6 @@ def clear_screen():
     os.system(clear)
 
 
-jobs = commands.Jobs(table_name='jobs')
-jobs.create_table()
-
-questions = commands.Questions(table_name='questions')
-questions.create_table()
-
-answers = commands.Answers(table_name='answers')
-answers.create_table()
-
-tips = commands.Tips(table_name='tips')
-tips.create_table()
-
-notes = commands.Notes(table_name='notes')
-notes.create_table()
-
-
 interview_questions = {
     'Q01': 'Tell me about yourself.',
     'Q02': 'Run through your resume for me.',
@@ -84,6 +68,7 @@ interview_questions = {
 #     print('Answered All Questions!!')
 #     print('Are you employed yet???')
 
+
 class Option:
     def __init__(self, name, menu, command, data):
         self.name = name
@@ -92,17 +77,24 @@ class Option:
         self.data = data
 
     def select(self):
-        if self.command is not None:
-            if self.data is not None:
-                self.command(self.data)
-            else:
-                self.command()
-        return self.menu
+        if self.data:
+            return self.command(self.data)
+        return self.command()
 
 
-class MainMenu:
-    def __init__(self):
-        pass
+class Main():
+    def __init__(self, name):
+        self.name = name
+
+    def print_menu(self):
+        # clear_screen()
+        print()
+        print(f'---------- {self.name.upper()} MENU ----------')
+        print()
+        for key, option in self.menu.items():
+            print(f'{key} : {option.name}')
+            print()
+        return self.name
 
     def practice(self):
         # Get random job and questions
@@ -115,102 +107,126 @@ class MainMenu:
         pass
 
 
-main = MainMenu()
+class Questions(commands.Jobs):
+    def __init__(self, name):
+        self.name = name
+        super().__init__(table_name=name)
+
+    def choose_command(self, command, data):
+        chosen = self.menu.get(command)
+        return chosen(data)
 
 
-def print_menu(selected_menu):
-    # clear_screen()
-    submenu = menus.get(selected_menu, 'main')
-    for key, option in submenu.items():
-        print(f'{key} : {option.name}')
+class Menu():
+    def __init__(self):
+        self._menus = {'main': {
+            # TODO: Create get_random function
+            '1': Option('Get a Random Job and Questions', 'main', None, None),
+            # 'J': Option('View Jobs Options', 'jobs', jobs.print_menu(), 'jobs'),
+            'Q': Option('View Questions Options', 'questions', self.print_menu, 'questions'),
+            'A': Option('View Answers Options', 'answers', None, 'answers'),
+            'T': Option('View Tips Options', 'tips', None, 'tips'),
+            'N': Option('View Notes Options', 'notes', None, 'notes'),
+        },
+            'questions': {
+            'A': Option('View questions Listing', 'questions', questions.view_all, None),
+            'B': Option('View a Specific question by ID', 'questions', questions.view, None),
+            'C': Option('Add a question', 'questions', questions.add, None),
+            'D': Option('Edit a question', 'questions', questions.edit, None),
+            'E': Option('Delete a question', 'questions', questions.delete, None),
+            'F': Option('Delete All questions', 'questions', questions.delete_all, None),
+            'G': Option('Reset questions to Default', 'questions', questions.reset, None),
+            'M': Option('Return to Main Menu', 'main', self.print_menu, 'main'),
+        },
+        }
+
+    def print_menu(self, menu):
+        # clear_screen()
         print()
-    return selected_menu
+        print(f'---------- {menu.upper()} MENU ----------')
+        print()
+        submenu = self._menus.get(menu)
+        for key, option in submenu.items():
+            print(f'{key} : {option.name}')
+            print()
+        return menu
 
-
-menus = {
-    'main': {
-        '1': Option('Get a Random Job and Questions', 'main', main.practice, None),  # TODO: Create get_random function
-        'J': Option('View Jobs Options', 'jobs', None, 'jobs'),
-        'Q': Option('View Questions Options', 'questions', None, 'questions'),
-        'A': Option('View Answers Options', 'answers', None, 'answers'),
-        'T': Option('View Tips Options', 'tips', None, 'tips'),
-        'N': Option('View Notes Options', 'notes', None, 'notes'),
-    },
-    'jobs': {
-        'A': Option('View Jobs Listing', 'jobs', jobs.view_all, None),
-        'B': Option('View a Specific Job by ID', 'jobs', jobs.view, None),
-        'C': Option('Add a Job', 'jobs', jobs.add, None),
-        'D': Option('Edit a Job', 'jobs', jobs.edit, None),
-        'E': Option('Delete a Job', 'jobs', jobs.delete, None),
-        'F': Option('Delete All Jobs', 'jobs', jobs.delete_all, None),
-        'G': Option('Reset Jobs to Default', 'jobs', jobs.reset, None),
-        'M': Option('Return to Main Menu', 'main', print_menu, 'main'),
-    },
-    # 'questions': {
-    #     'A': Option('View questions Listing', questions.view_all, None),
-    #     'B': Option('View a Specific question by ID', questions.view, None),
-    #     'C': Option('Add a question', questions.add, None),
-    #     'D': Option('Edit a question', questions.edit, None),
-    #     'E': Option('Delete a question', questions.delete, None),
-    #     'F': Option('Delete All questions', questions.delete_all, None),
-    #     'G': Option('Reset questions to Default', questions.reset, None),
-    #     'M': Option('Return to Main Menu', print_menu, 'main'),
-    # },
-    # 'answers': {
-    #     'A': Option('View answers Listing', answers.view_all, None),
-    #     'B': Option('View a Specific answer by ID', answers.view, None),
-    #     'C': Option('Add a answer', answers.add, None),
-    #     'D': Option('Edit a answer', answers.edit, None),
-    #     'E': Option('Delete a answer', answers.delete, None),
-    #     'F': Option('Delete All answers', answers.delete_all, None),
-    #     'G': Option('Reset answers to Default', answers.reset, None),
-    #     'M': Option('Return to Main Menu', print_menu, 'main'),
-    # },
-    # 'notes': {
-    #     'A': Option('View notes Listing', notes.view_all, None),
-    #     'B': Option('View a Specific note by ID', notes.view, None),
-    #     'C': Option('Add a note', notes.add, None),
-    #     'D': Option('Edit a note', notes.edit, None),
-    #     'E': Option('Delete a note', notes.delete, None),
-    #     'F': Option('Delete All notes', notes.delete_all, None),
-    #     'G': Option('Reset notes to Default', notes.reset, None),
-    #     'M': Option('Return to Main Menu', print_menu, 'main'),
-    # },
-    # 'tips': {
-    #     'A': Option('View tips Listing', tips.view_all, None),
-    #     'B': Option('View a Specific tip by ID', tips.view, None),
-    #     'C': Option('Add a tip', tips.add, None),
-    #     'D': Option('Edit a tip', tips.edit, None),
-    #     'E': Option('Delete a tip', tips.delete, None),
-    #     'F': Option('Delete All tips', tips.delete_all, None),
-    #     'G': Option('Reset tips to Default', tips.reset, None),
-    #     'M': Option('Return to Main Menu', print_menu, 'main'),
-    # },
-}
-
-
-def choose_command(submenu):
-    choice = input('Choose command: ')
-    new_menu = menus.get(submenu, 'main')
-    return new_menu[choice]
-
+    def choose_option(self, menu):
+        submenu = self._menus.get(menu)
+        choice = input('Choose option: ')
+        return submenu[choice]
 
 # MAIN PROGRAM
-# To Start
-current_menu = 'main'
-print()
-print('---------- MAIN MENU ----------')
-print()
-print_menu(current_menu)
+
+
+main = Main(name='main')
+
+questions = Questions(name='questions')
+questions.create_table()
+
+menu = Menu()
+
+current_menu = menu.print_menu('main')
+print(f'Current menu: {current_menu}')
+
 
 while True:
 
-    print()
-    # print(f'Current menu: {current_menu}')
-    chosen_command = choose_command(current_menu)
-    print()
+    chosen_command = menu.choose_option(current_menu)
     current_menu = chosen_command.select()
-    print()
-    print(f'---------- {current_menu.upper()} MENU ----------')
-    print()
-    print_menu(current_menu)
+
+# def get_option_choice(options):
+#     choice = input('Choose an option: ')
+#     while not option_choice_is_valid(choice, options):
+#         print('Invalid choice')
+#         choice = input('Choose an option: ')
+#     return options[choice.upper()]
+#     print()
+#     # print(f'Current menu: {current_menu}')
+
+#     print()
+#     current_menu = chosen_command.select()
+
+#     print_menu(current_menu)
+
+# 'jobs': {
+#     'A': Option('View Jobs Listing', 'jobs', jobs.view_all, None),
+#     'B': Option('View a Specific Job by ID', 'jobs', jobs.view, None),
+#     'C': Option('Add a Job', 'jobs', jobs.add, None),
+#     'D': Option('Edit a Job', 'jobs', jobs.edit, None),
+#     'E': Option('Delete a Job', 'jobs', jobs.delete, None),
+#     'F': Option('Delete All Jobs', 'jobs', jobs.delete_all, None),
+#     'G': Option('Reset Jobs to Default', 'jobs', jobs.reset, None),
+#     'M': Option('Return to Main Menu', 'main', print_menu, 'main'),
+# },
+
+# 'answers': {
+#     'A': Option('View answers Listing', answers.view_all, None),
+#     'B': Option('View a Specific answer by ID', answers.view, None),
+#     'C': Option('Add a answer', answers.add, None),
+#     'D': Option('Edit a answer', answers.edit, None),
+#     'E': Option('Delete a answer', answers.delete, None),
+#     'F': Option('Delete All answers', answers.delete_all, None),
+#     'G': Option('Reset answers to Default', answers.reset, None),
+#     'M': Option('Return to Main Menu', print_menu, 'main'),
+# },
+# 'notes': {
+#     'A': Option('View notes Listing', notes.view_all, None),
+#     'B': Option('View a Specific note by ID', notes.view, None),
+#     'C': Option('Add a note', notes.add, None),
+#     'D': Option('Edit a note', notes.edit, None),
+#     'E': Option('Delete a note', notes.delete, None),
+#     'F': Option('Delete All notes', notes.delete_all, None),
+#     'G': Option('Reset notes to Default', notes.reset, None),
+#     'M': Option('Return to Main Menu', print_menu, 'main'),
+# },
+# 'tips': {
+#     'A': Option('View tips Listing', tips.view_all, None),
+#     'B': Option('View a Specific tip by ID', tips.view, None),
+#     'C': Option('Add a tip', tips.add, None),
+#     'D': Option('Edit a tip', tips.edit, None),
+#     'E': Option('Delete a tip', tips.delete, None),
+#     'F': Option('Delete All tips', tips.delete_all, None),
+#     'G': Option('Reset tips to Default', tips.reset, None),
+#     'M': Option('Return to Main Menu', print_menu, 'main'),
+# },
