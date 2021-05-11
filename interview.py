@@ -1,8 +1,8 @@
 import random
 import commands
-from collections import namedtuple
 import os
 import sys
+import defaults
 
 
 def clear_screen():
@@ -45,6 +45,7 @@ class Menu():
                 'F': Option('Delete All questions', 'questions', questions.delete_all, None),
                 'G': Option('Reset questions to Default', 'questions', questions.reset, None),
                 'M': Option('Return to Main Menu', 'main', _return, None),
+                'Q': Option('Quit Program', 'main', sys.exit, None)
             },
             'answers': {
                 'A': Option('View answers Listing', 'answers', answers.view_all, None),
@@ -55,6 +56,7 @@ class Menu():
                 'F': Option('Delete All answers', 'answers', answers.delete_all, None),
                 'G': Option('Reset answers to Default', 'answers', answers.reset, None),
                 'M': Option('Return to Main Menu', _return, 'main', None),
+                'Q': Option('Quit Program', 'main', sys.exit, None)
             },
             'notes': {
                 'A': Option('View notes Listing', 'notes', notes.view_all, None),
@@ -65,6 +67,7 @@ class Menu():
                 'F': Option('Delete All notes', 'notes', notes.delete_all, None),
                 'G': Option('Reset notes to Default', 'notes', notes.reset, None),
                 'M': Option('Return to Main Menu', _return, 'main', None),
+                'Q': Option('Quit Program', 'main', sys.exit, None)
             },
             'tips': {
                 'A': Option('View tips Listing', 'tips', tips.view_all, None),
@@ -75,6 +78,7 @@ class Menu():
                 'F': Option('Delete All tips', 'tips', tips.delete_all, None),
                 'G': Option('Reset tips to Default', 'tips', tips.reset, None),
                 'M': Option('Return to Main Menu', _return, 'main', None),
+                'Q': Option('Quit Program', 'main', sys.exit, None)
             },
         }
 
@@ -86,15 +90,16 @@ class Menu():
 # MAIN PROGRAM
 
 
-def print_menu(menu):
+def print_menu(name):
     # clear_screen()
     print()
-    print(f'---------- {menu.upper()} MENU ----------')
+    print(f'---------- {name.upper()} MENU ----------')
     print()
-    submenu = menus._menus.get(current_menu)
+    submenu = menu._menus.get(current_menu)
     for key, option in submenu.items():
         print(f'{key} : {option.name}')
         print()
+
 
 def _return():
     pass
@@ -120,7 +125,8 @@ def reset_program():
 
 
 questions = commands.Questions(table_name='questions')
-questions.initialize()
+questions.create_table()
+questions.populate_defaults(defaults.default_questions)
 
 answers = commands.Answers(table_name='answers')
 answers.create_table()
@@ -132,7 +138,7 @@ notes = commands.Notes(table_name='notes')
 notes.create_table()
 
 
-menus = Menu()
+menu = Menu()
 
 current_menu = 'main'
 print_menu(current_menu)
@@ -140,7 +146,8 @@ print_menu(current_menu)
 
 while True:
     chosen_option = input('Choose option: ')
-    command = menus.get_command(current_menu, chosen_option)
+    # TODO: #70 Validate Input
+    command = menu.get_command(current_menu, chosen_option)
     current_menu = command.menu
     print()
     print('New Menu', command.menu)

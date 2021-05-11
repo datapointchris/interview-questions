@@ -35,3 +35,5 @@ questions = [
     'What motivates you?',
     'What can you offer us that other candidates cannot?',
 ]
+default_questions = [
+    {'id': i, 'question': q, 'answered': 0} for i, q in enumerate(questions)]

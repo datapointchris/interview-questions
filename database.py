@@ -1,7 +1,6 @@
 import sqlite3
 
 
-
 class DatabaseManager:
     def __init__(self, database_filename):
         self.connection = sqlite3.connect(database_filename)
@@ -26,7 +25,7 @@ class DatabaseManager:
             ({', '.join(columns_with_types)});
             '''
         )
-    
+
     def add(self, table_name, data):
         placeholders = ', '.join('?' * len(data))
         column_names = ', '.join(data.keys())
@@ -34,7 +33,7 @@ class DatabaseManager:
 
         self._execute(
             f'''
-            INSERT INTO {table_name}
+            INSERT OR IGNORE INTO {table_name}
             ({column_names})
             VALUES ({placeholders});
             ''',
@@ -86,4 +85,3 @@ class DatabaseManager:
             ''',
             column_values,
         )
-    
