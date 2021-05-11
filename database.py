@@ -28,7 +28,7 @@ class DatabaseManager:
         )
     
     def add(self, table_name, data):
-        placeholders = ', '.joint('?' * len(data))
+        placeholders = ', '.join('?' * len(data))
         column_names = ', '.join(data.keys())
         column_values = tuple(data.values())
 

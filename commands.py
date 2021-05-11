@@ -24,7 +24,9 @@ class BaseTable():
         db.select(self.table_name, criteria=criteria)
 
     def view_all(self):
-        db.select(self.table_name)
+        data = db.select(self.table_name).fetchall()
+        for record in data:
+            print(row)
 
     def add(self, data):
         db.add(self.table_name, data)
@@ -67,12 +69,17 @@ class Questions(BaseTable):
             'answered': 'integer'
         })
 
-    def view_answered():
+    def get_random_question():
         pass
 
-    def view_not_answered():
-        pass
-
+    def view_all(self):
+        data = db.select(self.table_name).fetchall()
+        print('---------- All Questions ----------')
+        print()
+        for record in data:
+            print(f'ID: {record[0]}')
+            print(f'Question: {record[1]}')
+            print()
 
 class Answers(BaseTable):
     def create_table(self, data=None):
