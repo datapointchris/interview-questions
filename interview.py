@@ -2,6 +2,7 @@ import random
 import commands
 from collections import namedtuple
 import os
+import sys
 
 
 def clear_screen():
@@ -99,7 +100,7 @@ class Menu():
                 '2': Option('Get a Random Unanswered Question', 'questions', five, None),
                 'J': Option('View All Questions', 'questions', questions.view_all, None),
                 'R': Option('Reset Program to Defaults', 'main', print_menu, 'jobs'),
-                'Q': Option('Quit Program', 'main', commands.QuitCommand, None)
+                'Q': Option('Quit Program', 'main', sys.exit, None)
             },
             # 'questions': {
             #     'A': Option('View All Questions', 'questions', questions.view_all, None),
