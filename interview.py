@@ -76,118 +76,92 @@ class Option:
         self.command = command
         self.data = data
 
-    def select(self):
+    def execute(self):
         if self.data:
             return self.command(self.data)
         return self.command()
 
 
-class Main():
-    def __init__(self, name):
-        self.name = name
-
-    def print_menu(self):
-        # clear_screen()
-        print()
-        print(f'---------- {self.name.upper()} MENU ----------')
-        print()
-        for key, option in self.menu.items():
-            print(f'{key} : {option.name}')
-            print()
-        return self.name
-
-    def practice(self):
-        # Get random job and questions
-        # jobs.view(random_job)
-        # questions.view(random_3_questions)
-        pass
-
-    def practice_not_practiced(self):
-        # Select from jobs not practiced
-        pass
-
-
-class Questions(commands.Jobs):
+class Questions(commands.Questions):
     def __init__(self, name):
         self.name = name
         super().__init__(table_name=name)
 
-    def choose_command(self, command, data):
-        chosen = self.menu.get(command)
-        return chosen(data)
-
 
 class Menu():
     def __init__(self):
-        self._menus = {'main': {
-            # TODO: Create get_random function
-            '1': Option('Get a Random Job and Questions', 'main', None, None),
-            # 'J': Option('View Jobs Options', 'jobs', jobs.print_menu(), 'jobs'),
-            'Q': Option('View Questions Options', 'questions', self.print_menu, 'questions'),
-            'A': Option('View Answers Options', 'answers', None, 'answers'),
-            'T': Option('View Tips Options', 'tips', None, 'tips'),
-            'N': Option('View Notes Options', 'notes', None, 'notes'),
-        },
-            'questions': {
-            'A': Option('View questions Listing', 'questions', questions.view_all, None),
-            'B': Option('View a Specific question by ID', 'questions', questions.view, None),
-            'C': Option('Add a question', 'questions', questions.add, None),
-            'D': Option('Edit a question', 'questions', questions.edit, None),
-            'E': Option('Delete a question', 'questions', questions.delete, None),
-            'F': Option('Delete All questions', 'questions', questions.delete_all, None),
-            'G': Option('Reset questions to Default', 'questions', questions.reset, None),
-            'M': Option('Return to Main Menu', 'main', self.print_menu, 'main'),
-        },
+        self._menus = {
+            'main': {
+
+                # (name, command, data)
+                'M': Option('Print Main Menu', 'main', print_menu, 'main'),
+                '1': Option('Get a Random Question', 'questions', four, None),
+                '2': Option('Get a Random Unanswered Question', 'questions', five, None),
+                'J': Option('View All Questions', 'questions', questions.view_all, None),
+                'R': Option('Reset Program to Defaults', 'main', print_menu, 'jobs'),
+                'Q': Option('Quit Program', 'main', commands.QuitCommand, None)
+            },
+            # 'questions': {
+            #     'A': Option('View All Questions', 'questions', questions.view_all, None),
+            #     'B': Option('View a Question by ID', 'questions', questions.view, None),
+            #     'C': Option('Add a question', 'questions', questions.add, None),
+            #     'D': Option('Edit a question', 'questions', questions.edit, None),
+            #     'E': Option('Delete a question', 'questions', questions.delete, None),
+            #     'F': Option('Delete All questions', 'questions', questions.delete_all, None),
+            #     'G': Option('Reset questions to Default', 'questions', questions.reset, None),
+            #     'M': Option('Return to Main Menu', 'main', self.print_menu, 'main'),
+            # },
         }
 
-    def print_menu(self, menu):
-        # clear_screen()
-        print()
-        print(f'---------- {menu.upper()} MENU ----------')
-        print()
+    def get_command(self, menu, chosen_option):
         submenu = self._menus.get(menu)
-        for key, option in submenu.items():
-            print(f'{key} : {option.name}')
-            print()
-        return menu
-
-    def choose_option(self, menu):
-        submenu = self._menus.get(menu)
-        choice = input('Choose option: ')
-        return submenu[choice]
+        command = submenu[chosen_option]
+        return command
 
 # MAIN PROGRAM
 
 
-main = Main(name='main')
+def print_menu(menu):
+    # clear_screen()
+    print()
+    print(f'---------- {menu.upper()} MENU ----------')
+    print()
+    submenu = menus._menus.get(current_menu)
+    for key, option in submenu.items():
+        print(f'{key} : {option.name}')
+        print()
+
+
+def four():
+    print(4)
+
+
+def five():
+    return {'5': 'yeah five'}
+
 
 questions = Questions(name='questions')
 questions.create_table()
 
-menu = Menu()
+menus = Menu()
 
-current_menu = menu.print_menu('main')
-print(f'Current menu: {current_menu}')
+current_menu = 'main'
+print_menu(current_menu)
 
 
 while True:
+    chosen_option = input('Choose option: ')
+    command = menus.get_command(current_menu, chosen_option)
+    current_menu = command.menu
+    print()
+    print('New Menu', command.menu)
+    print('Command Question Class', command)
+    print('Command', command.command)
+    print('Data', command.data)
+    print()
+    command.execute()
+    # print_menu(new_menu)
 
-    chosen_command = menu.choose_option(current_menu)
-    current_menu = chosen_command.select()
-
-# def get_option_choice(options):
-#     choice = input('Choose an option: ')
-#     while not option_choice_is_valid(choice, options):
-#         print('Invalid choice')
-#         choice = input('Choose an option: ')
-#     return options[choice.upper()]
-#     print()
-#     # print(f'Current menu: {current_menu}')
-
-#     print()
-#     current_menu = chosen_command.select()
-
-#     print_menu(current_menu)
 
 # 'jobs': {
 #     'A': Option('View Jobs Listing', 'jobs', jobs.view_all, None),
