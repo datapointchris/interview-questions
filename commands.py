@@ -1,7 +1,7 @@
 from database import DatabaseManager
 from datetime import datetime
 import sys
-
+import defaults
 
 db = DatabaseManager('interview.db')
 
@@ -16,6 +16,16 @@ class BaseTable():
 
     def __init__(self, table_name):
         self.table_name = table_name
+
+    def create_table(self):
+        pass
+
+    def populate_defaults(self):
+        pass
+
+    def initialize(self):
+        self.create_table()
+        self.populate_defaults()
 
     def drop_table(self):
         db.drop_table(self.table_name)
@@ -69,6 +79,12 @@ class Questions(BaseTable):
             'answered': 'integer'
         })
 
+    def populate_defaults(self):
+        default_question_dictionaries = [
+            {'id': i, 'question': q, 'answered': 0} for i, q in enumerate(defaults.questions)]
+        for dict_row in default_question_dictionaries:
+            db.add('questions', dict_row)
+
     def get_random_question():
         pass
 
@@ -80,6 +96,7 @@ class Questions(BaseTable):
             print(f'ID: {record[0]}')
             print(f'Question: {record[1]}')
             print()
+
 
 class Answers(BaseTable):
     def create_table(self, data=None):
