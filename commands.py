@@ -1,12 +1,15 @@
 from database import DatabaseManager
 from datetime import datetime
+import sys
 
 
 db = DatabaseManager('interview.db')
 
+
 class QuitCommand():
     def execute(self, data=None):
         sys.exit()
+
 
 class BaseTable():
     '''Base class for handling all common table functions'''
@@ -14,32 +17,32 @@ class BaseTable():
     def __init__(self, table_name):
         self.table_name = table_name
 
-    def drop_table():
+    def drop_table(self):
         db.drop_table(self.table_name)
 
-    def view(criteria):
+    def view(self, criteria):
         db.select(self.table_name, criteria=criteria)
 
-    def view_all():
-        db.select(self.table_name, criteria=criteria)
+    def view_all(self):
+        db.select(self.table_name)
 
-    def add(data):
+    def add(self, data):
         db.add(self.table_name, data)
 
-    def edit(criteria):
+    def edit(self, data):
         db.update(self.table_name, data)
 
-    def delete():
+    def delete(self):
         db.delete()
 
-    def delete_all():
+    def delete_all(self):
         db.delete()
 
-    def reset():
+    def reset(self):
         pass
 
 
-class Jobs():
+class Jobs(BaseTable):
 
     def create_table(self, data=None):
         db.create_table('jobs', {
@@ -48,14 +51,14 @@ class Jobs():
             'date_added': 'text'
         })
 
-    def view_practiced():
+    def view_practiced(self):
         db.select('jobs', criteria={'reviewed': True})
 
-    def view_not_practiced():
+    def view_not_practiced(self):
         db.select('jobs', criteria={'reviewed': False})
 
 
-class Questions():
+class Questions(BaseTable):
 
     def create_table(self, data=None):
         db.create_table('questions', {
@@ -71,7 +74,7 @@ class Questions():
         pass
 
 
-class Answers():
+class Answers(BaseTable):
     def create_table(self, data=None):
         db.create_table('answers', {
             'id': 'integer primary key autoincrement',
@@ -79,7 +82,7 @@ class Answers():
         })
 
 
-class Tips():
+class Tips(BaseTable):
     def create_table(self, data=None):
         db.create_table('tips', {
             'id': 'integer primary key autoincrement',
@@ -87,7 +90,7 @@ class Tips():
         })
 
 
-class Notes():
+class Notes(BaseTable):
     def create_table(self, data=None):
         db.create_table('notes', {
             'id': 'integer primary key autoincrement',
