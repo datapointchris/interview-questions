@@ -89,9 +89,9 @@ class Menu():
     def get_command(self, menu):
         submenu = self._menus.get(menu)
         choice = input('Choose option: ').upper()
-        while not self.option_choice_is_valid(choice, options=submenu):
-            print(f'Invalid option: "{choice}"')
-            choice = input('Choose option: ').upper()
+        # while not self.option_choice_is_valid(choice, options=submenu):
+        #     print(f'Invalid option: "{choice}"')
+        #     choice = input('Choose option: ').upper()
         command = submenu.get(choice)
         return command
 
