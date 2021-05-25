@@ -74,7 +74,7 @@ class Questions(BaseTable):
             'answered': 'integer'
         })
 
-    def get_random_question():
+    def get_random_question(self):
         pass
 
     def view_all(self):

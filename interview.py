@@ -32,8 +32,7 @@ class Menu():
 
                 # (name, command, data)
                 'M': Option('Print Main Menu', 'main', clear_screen, None),
-                '1': Option('Get a Random Question', 'questions', four, None),
-                '2': Option('Get a Random Unanswered Question', 'questions', five, None),
+                '1': Option('Get a Random Question', 'questions', questions.get_random_question, None),
                 'J': Option('View All Questions', 'questions', questions.view_all, None),
                 'R': Option('Reset Program to Defaults', 'main', reset_program, None),
                 'Q': Option('Quit Program', 'main', sys.exit, None)
@@ -83,10 +82,17 @@ class Menu():
                 'Q': Option('Quit Program', 'main', sys.exit, None)
             },
         }
+    
+    def option_choice_is_valid(self, choice, options):
+        return choice in options
 
-    def get_command(self, menu, chosen_option):
+    def get_command(self, menu):
         submenu = self._menus.get(menu)
-        command = submenu[chosen_option]
+        choice = input('Choose option: ').upper()
+        while not self.option_choice_is_valid(choice, options=submenu):
+            print(f'Invalid option: "{choice}"')
+            choice = input('Choose option: ').upper()
+        command = submenu.get(choice)
         return command
 
 # MAIN PROGRAM
@@ -128,7 +134,6 @@ tips.create_table()
 notes = commands.Notes(table_name='notes')
 notes.create_table()
 
-
 menu = Menu()
 clear_screen()
 current_menu = 'main'
@@ -136,18 +141,9 @@ print_menu(current_menu)
 
 
 while True:
-    chosen_option = input('Choose option: ').upper()
-    # TODO: #70 Validate Input
-    command = menu.get_command(current_menu, chosen_option)
+    
+    command = menu.get_command(menu=current_menu)
     current_menu = command.menu
-
-    # For Debugging ONLY
-    # print()
-    # print('New Menu', command.menu)
-    # print('Command Question Class', command)
-    # print('Command', command.command)
-    # print('Data', command.data)
-    # print()
     clear_screen()
     command.execute()
     print_menu(current_menu)
