@@ -29,7 +29,7 @@ class Menu():
             'main': {
 
                 # (name, command, data)
-                'M': Option('Print Main Menu', 'main', _return, None),
+                'M': Option('Print Main Menu', 'main', print_menu, None),
                 '1': Option('Get a Random Question', 'questions', four, None),
                 '2': Option('Get a Random Unanswered Question', 'questions', five, None),
                 'J': Option('View All Questions', 'questions', questions.view_all, None),
@@ -44,7 +44,7 @@ class Menu():
                 'E': Option('Delete a question', 'questions', questions.delete, None),
                 'F': Option('Delete All questions', 'questions', questions.delete_all, None),
                 'G': Option('Reset questions to Default', 'questions', questions.reset, None),
-                'M': Option('Return to Main Menu', 'main', _return, None),
+                'M': Option('Return to Main Menu', 'main', print_menu, None),
                 'Q': Option('Quit Program', 'main', sys.exit, None)
             },
             'answers': {
@@ -55,7 +55,7 @@ class Menu():
                 'E': Option('Delete a answer', 'answers', answers.delete, None),
                 'F': Option('Delete All answers', 'answers', answers.delete_all, None),
                 'G': Option('Reset answers to Default', 'answers', answers.reset, None),
-                'M': Option('Return to Main Menu', _return, 'main', None),
+                'M': Option('Return to Main Menu', 'main', print_menu, None),
                 'Q': Option('Quit Program', 'main', sys.exit, None)
             },
             'notes': {
@@ -66,7 +66,7 @@ class Menu():
                 'E': Option('Delete a note', 'notes', notes.delete, None),
                 'F': Option('Delete All notes', 'notes', notes.delete_all, None),
                 'G': Option('Reset notes to Default', 'notes', notes.reset, None),
-                'M': Option('Return to Main Menu', _return, 'main', None),
+                'M': Option('Return to Main Menu', 'main', print_menu, None),
                 'Q': Option('Quit Program', 'main', sys.exit, None)
             },
             'tips': {
@@ -77,7 +77,7 @@ class Menu():
                 'E': Option('Delete a tip', 'tips', tips.delete, None),
                 'F': Option('Delete All tips', 'tips', tips.delete_all, None),
                 'G': Option('Reset tips to Default', 'tips', tips.reset, None),
-                'M': Option('Return to Main Menu', _return, 'main', None),
+                'M': Option('Return to Main Menu', 'main', print_menu, None),
                 'Q': Option('Quit Program', 'main', sys.exit, None)
             },
         }
@@ -91,7 +91,7 @@ class Menu():
 
 
 def print_menu(name):
-    # clear_screen()
+    clear_screen()
     print()
     print(f'---------- {name.upper()} MENU ----------')
     print()
@@ -101,8 +101,9 @@ def print_menu(name):
         print()
 
 
-def _return():
+def return_to_main_menu():
     pass
+    # menu prints automatically
 
 
 def four():
@@ -149,11 +150,15 @@ while True:
     # TODO: #70 Validate Input
     command = menu.get_command(current_menu, chosen_option)
     current_menu = command.menu
-    print()
-    print('New Menu', command.menu)
-    print('Command Question Class', command)
-    print('Command', command.command)
-    print('Data', command.data)
-    print()
+    
+    # For Debugging ONLY
+    # print()
+    # print('New Menu', command.menu)
+    # print('Command Question Class', command)
+    # print('Command', command.command)
+    # print('Data', command.data)
+    # print()
+
     command.execute()
+    print('=' * 25)
     print_menu(current_menu)
