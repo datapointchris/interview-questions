@@ -8,7 +8,7 @@ import defaults
 
 def clear_screen():
     clear = 'cls' if os.name == 'nt' else 'clear'
-    print("\n" * 150)  
+    print("\n" * 150)
     subprocess.call(clear, shell=True)
 
 
@@ -91,6 +91,7 @@ class Menu():
 
 # MAIN PROGRAM
 
+
 def print_menu(name):
     menu_string = f'### ---------------      {name.upper()} MENU      --------------- ###'
     print('#' * len(menu_string))
@@ -101,20 +102,6 @@ def print_menu(name):
     for key, option in submenu.items():
         print(f'{key} : {option.name}')
         print()
-
-
-def return_to_menu():
-    clear_screen()
-    pass
-    # menu prints automatically
-
-
-def four():
-    print(4)
-
-
-def five():
-    return {'5': 'yeah five'}
 
 
 def reset_program():
@@ -153,7 +140,7 @@ while True:
     # TODO: #70 Validate Input
     command = menu.get_command(current_menu, chosen_option)
     current_menu = command.menu
-    
+
     # For Debugging ONLY
     # print()
     # print('New Menu', command.menu)
