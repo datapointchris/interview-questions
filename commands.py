@@ -41,12 +41,15 @@ class BaseTable():
     def reset(self):
         pass
 
-    def print_title_bar(self, name):
-        left_pad = '|' + ('-' * 20) + (' ' * 5)
-        right_pad = (' ' * 5) + ('-' * 20) + '|'
-        title = f'{left_pad}{name.upper()}{right_pad}'
-        border = '|' + ('-' * (len(title) - 2)) + '|'
-        print('\n'.join([border, title, border, '']))
+    def print_title_bar(self):
+        max_width = 80
+        space = max_width - len(self.table_name) - 10
+        left_pad = ('⎼' * (space // 2)) + (' ' * 5)
+        right_pad = (' ' * 5) + ('⎼' * (space // 2))
+        title = f'{left_pad}{self.table_name.upper()}{right_pad}'
+        top_border = '⎺' * len(title)
+        bottom_border = '⎽' * len(title)
+        print('\n'.join([top_border, title, bottom_border, '']))
 
 
 class Jobs(BaseTable):
@@ -78,7 +81,7 @@ class Questions(BaseTable):
         pass
 
     def view_all(self):
-        self.print_title_bar(self.table_name)
+        self.print_title_bar()
         data = db.select(self.table_name).fetchall()
         for record in data:
             print(f'ID: {record[0]}')

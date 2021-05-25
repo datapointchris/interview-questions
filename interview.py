@@ -82,7 +82,7 @@ class Menu():
                 'Q': Option('Quit Program', 'main', sys.exit, None)
             },
         }
-    
+
     def option_choice_is_valid(self, choice, options):
         return choice in options
 
@@ -99,10 +99,15 @@ class Menu():
 
 
 def print_menu(name):
-    menu_string = f'### ---------------      {name.upper()} MENU      --------------- ###'
-    print('#' * len(menu_string))
-    print(menu_string)
-    print('#' * len(menu_string))
+    border = '⑊ '
+    width = 10
+    padding = 5
+    menu_string = f'{border*width}{" "*padding}{name.upper()} MENU{" "*padding}{border*width}'
+    q, r = divmod(len(menu_string), len(border))
+    adjusted_menu_string = f'{border*width}{" "*padding}{name.upper()} MENU{" "*padding}{" "*r}{border*width}'
+    print(border * (q + r))
+    print(' ' + adjusted_menu_string)
+    print('  ' + border * (q + r))
     print()
     submenu = menu._menus.get(current_menu)
     for key, option in submenu.items():
@@ -141,7 +146,7 @@ print_menu(current_menu)
 
 
 while True:
-    
+
     command = menu.get_command(menu=current_menu)
     current_menu = command.menu
     clear_screen()
