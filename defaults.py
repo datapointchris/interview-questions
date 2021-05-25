@@ -34,6 +34,14 @@ questions = [
     'Discuss your education.',
     'What motivates you?',
     'What can you offer us that other candidates cannot?',
+    'Tell me about one of your favorite projects that you have worked on.',
+    'Tell me about a specific thing that you did that positively impacted a program or this project that you worked on.',
+    'Tell me about the person you have worked with who has had the single biggest impact on you.',
+    'Tell me what a productive day at work looks like for you.',
+    'What has been the most challenging problem you have faced and how did you solve it?',
+    'Tell me about a time when you had a conflict with a coworker,',
+    'Can you tell me about a time when you have to push back on the stakeholder and what actions did you take?',
+    'Do you have hobbies?'
 ]
 default_questions = [
     {'id': i, 'question': q, 'answered': 0} for i, q in enumerate(questions)]
