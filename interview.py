@@ -100,7 +100,7 @@ class Menu():
 
 def print_menu(name):
     border = '⑊ '
-    width = 10
+    width = (80 - len(name))//6
     padding = 5
     menu_string = f'{border*width}{" "*padding}{name.upper()} MENU{" "*padding}{border*width}'
     q, r = divmod(len(menu_string), len(border))
