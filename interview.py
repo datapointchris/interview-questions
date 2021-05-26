@@ -30,7 +30,7 @@ class Menu():
         self._menus = {
             'main': {
 
-                # (name, command, data)
+                # (name, menu, command, data)
                 'M': Option('Print Main Menu', 'main', clear_screen, None),
                 '1': Option('Get a Random Question', 'questions', questions.get_random_question, None),
                 'J': Option('View All Questions', 'questions', questions.view_all, None),
@@ -82,16 +82,16 @@ class Menu():
                 'Q': Option('Quit Program', 'main', sys.exit, None)
             },
         }
-
-    # def option_choice_is_valid(self, choice, options):
-    #     return choice in options
+# TODO: #73 validate_input
+    def option_choice_is_valid(self, choice, options):
+        return choice in options
 
     def get_command(self, menu):
         submenu = self._menus.get(menu)
         choice = input('Choose option: ').upper()
-        # while not self.option_choice_is_valid(choice, options=submenu):
-        #     print(f'Invalid option: "{choice}"')
-        #     choice = input('Choose option: ').upper()
+        while not self.option_choice_is_valid(choice, options=submenu):
+            print(f'Invalid option: "{choice}"')
+            choice = input('Choose option: ').upper()
         command = submenu.get(choice)
         return command
 
