@@ -83,8 +83,8 @@ class Menu():
             },
         }
 
-    def option_choice_is_valid(self, choice, options):
-        return choice in options
+    # def option_choice_is_valid(self, choice, options):
+    #     return choice in options
 
     def get_command(self, menu):
         submenu = self._menus.get(menu)
