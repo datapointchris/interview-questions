@@ -33,11 +33,14 @@ class Menu():
                 # (name, menu, command, data)
                 'M': Option('Print Main Menu', 'main', clear_screen, None),
                 '1': Option('Get a Random Question', 'questions', questions.get_random_question, None),
+                '2': Option('Get a Random Unanswered Question', 'questions', questions.get_random_unanswered_question, None),
                 'J': Option('View All Questions', 'questions', questions.view_all, None),
                 'R': Option('Reset Program to Defaults', 'main', reset_program, None),
                 'Q': Option('Quit Program', 'main', sys.exit, None)
             },
             'questions': {
+                '1': Option('Get a Random Question', 'questions', questions.get_random_question, None),
+                '2': Option('Get a Random Unanswered Question', 'questions', questions.get_random_unanswered_question, None),
                 'A': Option('View All Questions', 'questions', questions.view_all, None),
                 'B': Option('View a Question by ID', 'questions', questions.view, None),
                 'C': Option('Add a question', 'questions', questions.add, None),
@@ -102,7 +105,7 @@ class Menu():
 
 def print_menu(name):
     border = '⑊ '
-    width = (80 - len(name))//6
+    width = (80 - len(name)) // 6
     padding = 5
     menu_string = f'{border*width}{" "*padding}{name.upper()} MENU{" "*padding}{border*width}'
     q, r = divmod(len(menu_string), len(border))

@@ -69,6 +69,21 @@ class DatabaseManager:
             tuple(criteria.values()),
         )
 
+    def select_random(self, table_name, criteria=None):
+        criteria = criteria or {}
+
+        query = f'SELECT * FROM {table_name} ORDER BY RANDOM() LIMIT 1'
+
+        if criteria:
+            placeholders = [f'{column} = ?' for column in criteria.keys()]
+            select_criteria = ' AND '.join(placeholders)
+            query += f' WHERE {select_criteria}'
+
+        return self._execute(
+            query,
+            tuple(criteria.values()),
+        )
+
     def drop_table(self, table_name):
         self._execute(f'DROP TABLE {table_name}')
 
