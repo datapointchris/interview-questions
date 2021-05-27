@@ -52,7 +52,7 @@ class BaseTable():
         print('\n'.join([top_border, title, bottom_border, '']))
 
 
-class Jobs(BaseTable):
+class Jobs(BaseTable):  # this class and table isn't going to be used in v1.0
 
     def create_table(self, data=None):
         db.create_table('jobs', {
@@ -78,6 +78,15 @@ class Questions(BaseTable):
         })
 
     def get_random_question(self):
+        record = db.select_random(self.table_name).fetchone()
+        print(f'ID: {record[0]}')
+        print(f'Question: {record[1]}')
+        print()
+        print()
+
+# TODO: #76 add get_random_unanswered_question_function
+
+    def get_random_unanswered_question(self, data=None):
         pass
 
     def view_all(self):
