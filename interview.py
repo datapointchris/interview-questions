@@ -82,7 +82,7 @@ class Menu():
                 'Q': Option('Quit Program', 'main', sys.exit, None)
             },
         }
-# TODO: #73 validate_input
+
     def option_choice_is_valid(self, choice, options):
         return choice in options
 
@@ -90,7 +90,9 @@ class Menu():
         submenu = self._menus.get(menu)
         choice = input('Choose option: ').upper()
         while not self.option_choice_is_valid(choice, options=submenu):
+            print()
             print(f'Invalid option: "{choice}"')
+            print()
             choice = input('Choose option: ').upper()
         command = submenu.get(choice)
         return command
