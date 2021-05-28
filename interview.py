@@ -38,11 +38,11 @@ class Menu():
             'main': {
 
                 # (name, menu, command, data)
-                'M': Option('Print Main Menu', 'main', clear_screen, None),
+                '5': Option('Questions Menu', 'questions', clear_screen, None),
                 '1': Option('Get a Random Question', 'questions', questions.get_random_question, None),
                 '2': Option('Get a Random Unanswered Question',
                             'questions',
-                            questions.get_not_viewed_question,
+                            questions.get_random_question,
                             {'answered': 0}),
                 'J': Option('View All Questions', 'questions', questions.view_all, None),
                 'R': Option('Reset Program to Defaults', 'main', reset_program, None),
@@ -52,8 +52,8 @@ class Menu():
                 '1': Option('Get a Random Question', 'questions', questions.get_random_question, None),
                 '2': Option('Get a Random Unanswered Question',
                             'questions',
-                            questions.get_not_viewed_question,
-                            {'answered': 1}),
+                            questions.get_random_question,
+                            {'answered': 0}),
                 'A': Option('View All Questions', 'questions', questions.view_all, None),
                 'B': Option('View a Question by ID', 'questions', questions.view, 'id'),
                 'C': Option('Add a question', 'questions', questions.add, None),
