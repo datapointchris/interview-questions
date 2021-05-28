@@ -30,6 +30,7 @@ class BaseTable():
         record = db.select(self.table_name, criteria={selection_criteria: user_choice}).fetchone()
         print(f'ID: {record[0]}')
         print(f'Question: {record[1]}')
+        print(f'Answered: {"Y" if record[2] == 1 else "N"}')
         print()
 
     def view_all(self):
