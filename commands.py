@@ -28,6 +28,7 @@ class BaseTable():
         user_choice = input(f'Select {selection_criteria.upper()}: ')
         print(f'selection: {selection_criteria}, user_choice: {user_choice}')
         record = db.select(self.table_name, criteria={selection_criteria: user_choice}).fetchone()
+# TODO: #79 Make this print programatically
         print(f'ID: {record[0]}')
         print(f'Question: {record[1]}')
         print(f'Answered: {"Y" if record[2] == 1 else "N"}')
@@ -121,7 +122,7 @@ class Questions(BaseTable):
     def view_all(self):
         self.print_title_bar()
         data = db.select(self.table_name).fetchall()
-# TODO: Automate this so that it gets the columns and prints them
+# TODO: #78 Automate this so that it gets the columns and prints them
         for record in data:
             print(f'ID: {record[0]}')
             print(f'Question: {record[1]}')
