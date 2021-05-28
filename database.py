@@ -14,6 +14,11 @@ class DatabaseManager:
             cursor.execute(statement, values or [])
             return cursor
 
+    def get_table_col_names(self, table_name):
+        with self.connection:
+            cursor = self.connection.cursor()
+
+
     def create_table(self, table_name, columns):
         columns_with_types = [
             f'{column_name} {data_type}'
@@ -80,9 +85,7 @@ class DatabaseManager:
             query += f' WHERE {select_criteria}'
 
         query += ' ORDER BY RANDOM() LIMIT 1'
-        print(f'QUERY: {query}')
-        print(f'KEY: {criteria.keys()}')
-        print(f'VALUE: {criteria.values()}')
+
         return self._execute(
             query,
             tuple(criteria.values()),

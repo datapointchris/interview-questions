@@ -19,27 +19,46 @@ class BaseTable():
     def __init__(self, table_name):
         self.table_name = table_name
 
+    def print_title_bar(self, name):
+        max_width = 80
+        space = max_width - len(name) - 10
+        left_pad = ('⎼' * (space // 2)) + (' ' * 5)
+        right_pad = (' ' * 5) + ('⎼' * (space // 2))
+        title = f'{left_pad}{name.upper()}{right_pad}'
+        top_border = '⎺' * len(title)
+        bottom_border = '⎽' * len(title)
+        print('\n'.join([top_border, title, bottom_border, '']))
+
+    def print_records(self, cursor):
+        columns = [tuple[0] for tuple in cursor.description]
+        records = cursor.fetchall()
+        if records:
+            for i, record in enumerate(records):
+                for column, record_item in zip(columns, record):
+                    print(f'{column.upper()}:  '
+                          f'{"Y" if record_item == 1 else "N" if record_item == 0 else record_item}')
+                print()
+        else:
+            print('No matching records found.')
+            print()
+        print('-' * 80)
+        print()
+
     def populate_defaults(self, records):
         for record in records:
             db.add(self.table_name, record)
 
-    def drop_table(self):
-        db.drop_table(self.table_name)
-
     def view(self, selection_criteria):
         user_choice = input(f'Select {selection_criteria.upper()}: ')
-        print(f'selection: {selection_criteria}, user_choice: {user_choice}')
-        record = db.select(self.table_name, criteria={selection_criteria: user_choice}).fetchone()
-# TODO: #79 Make this print programatically
-        print(f'ID: {record[0]}')
-        print(f'Question: {record[1]}')
-        print(f'Answered: {"Y" if record[2] == 1 else "N"}')
-        print()
+        # print(f'selection: {selection_criteria}, user_choice: {user_choice}')
+        cursor = db.select(self.table_name, criteria={selection_criteria: user_choice})
+        self.print_title_bar('View by ID')
+        self.print_records(cursor)
 
     def view_all(self):
-        data = db.select(self.table_name).fetchall()
-        for record in data:
-            print(record)
+        cursor = db.select(self.table_name)
+        self.print_title_bar(f'View All {self.table_name}')
+        self.print_records(cursor)
 
     def add(self, data):
         db.add(self.table_name, data)
@@ -56,15 +75,8 @@ class BaseTable():
     def reset(self):
         pass
 
-    def print_title_bar(self):
-        max_width = 80
-        space = max_width - len(self.table_name) - 10
-        left_pad = ('⎼' * (space // 2)) + (' ' * 5)
-        right_pad = (' ' * 5) + ('⎼' * (space // 2))
-        title = f'{left_pad}{self.table_name.upper()}{right_pad}'
-        top_border = '⎺' * len(title)
-        bottom_border = '⎽' * len(title)
-        print('\n'.join([top_border, title, bottom_border, '']))
+    def drop_table(self):
+        db.drop_table(self.table_name)
 
 
 class Jobs(BaseTable):  # this class and table isn't going to be used in v1.0
@@ -92,21 +104,15 @@ class Questions(BaseTable):
             'answered': 'integer'
         })
 
-    def get_random_question(self):
-        record = db.select_random(self.table_name).fetchone()
-        print(f'ID: {record[0]}')
-        print(f'Question: {record[1]}')
-        print()
-        print()
-
-# TODO: #76 add get_random_unanswered_question_function
-
-    def get_not_viewed_question(self, data):
-        record = db.select_random(self.table_name, data).fetchone()
-        print(f'ID: {record[0]}')
-        print(f'Question: {record[1]}')
-        print()
-        print()
+    def get_random_question(self, data=None):
+        if data:
+            cursor = db.select_random(self.table_name, data)
+            name = 'Random Unanswered Question'
+        else:
+            cursor = db.select_random(self.table_name)
+            name = 'Random Question'
+        self.print_title_bar(name)
+        self.print_records(cursor)
 
     def edit_question(self):
         id = input('ID to Edit: ')
@@ -118,17 +124,8 @@ class Questions(BaseTable):
         edited_question = input('Enter the edited question: ')
         answered = validate_input(
             f'Question is answered? (Currently: {"Y" if record[2] == 1 else "N"}), Y/N?', {'Y': 1, 'N': 0})
-        update_data = {'question': edited_question, 'answered': answered}
+        update_data = {'id': id, 'question': edited_question, 'answered': answered}
         db.update(self.table_name, {'id': id}, update_data)
-
-    def view_all(self):
-        self.print_title_bar()
-        data = db.select(self.table_name).fetchall()
-# TODO: #78 Automate this so that it gets the columns and prints them
-        for record in data:
-            print(f'ID: {record[0]}')
-            print(f'Question: {record[1]}')
-            print()
 
 
 class Answers(BaseTable):
