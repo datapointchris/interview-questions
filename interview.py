@@ -11,11 +11,13 @@ def clear_screen():
     print("\n" * 150)
     subprocess.call(clear, shell=True)
 
+
 def get_user_input(label, required=True):
     value = input(f'{label}: ') or None
     while required and not value:
         value = input(f'{label}: ') or None
     return value
+
 
 class Option:
     def __init__(self, name, menu, command, data):
@@ -48,16 +50,16 @@ class Menu():
             },
             'questions': {
                 '1': Option('Get a Random Question', 'questions', questions.get_random_question, None),
-                '2': Option('Get a Random Unanswered Question', 
-                            'questions', 
-                            questions.get_not_viewed_question, 
+                '2': Option('Get a Random Unanswered Question',
+                            'questions',
+                            questions.get_not_viewed_question,
                             {'answered': 0}),
                 'A': Option('View All Questions', 'questions', questions.view_all, None),
                 'B': Option('View a Question by ID', 'questions', questions.view, 'id'),
                 'C': Option('Add a question', 'questions', questions.add, None),
-                'D': Option('Edit a question', 
-                            'questions', 
-                            questions.edit_question, 
+                'D': Option('Edit a question',
+                            'questions',
+                            questions.edit_question,
                             None),
                 'E': Option('Delete a question', 'questions', questions.delete, None),
                 'F': Option('Delete All questions', 'questions', questions.delete_all, None),
