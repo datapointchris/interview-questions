@@ -4,6 +4,12 @@ import sys
 
 db = DatabaseManager('interview.db')
 
+def validate_input(input_message, option_map):
+    """option_map should be a dictionary of mappings"""
+    choice = input(f'{input_message} ')
+    while choice not in option_map.keys():
+        choice = input(f'{input_message} ')
+    return option_map.get(choice)
 
 class BaseTable():
     '''Base class for handling all common table functions'''
