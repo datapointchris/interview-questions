@@ -5,6 +5,14 @@ import sys
 db = DatabaseManager('interview.db')
 
 
+def validate_input(input_message, option_map):
+    """option_map should be a dictionary of mappings"""
+    choice = input(f'{input_message} ').upper()
+    while choice not in option_map.keys():
+        choice = input(f'{input_message} ').upper()
+    return option_map.get(choice)
+
+
 class BaseTable():
     '''Base class for handling all common table functions'''
 
@@ -18,8 +26,15 @@ class BaseTable():
     def drop_table(self):
         db.drop_table(self.table_name)
 
-    def view(self, criteria):
-        db.select(self.table_name, criteria=criteria)
+    def view(self, selection_criteria):
+        user_choice = input(f'Select {selection_criteria.upper()}: ')
+        print(f'selection: {selection_criteria}, user_choice: {user_choice}')
+        record = db.select(self.table_name, criteria={selection_criteria: user_choice}).fetchone()
+# TODO: #79 Make this print programatically
+        print(f'ID: {record[0]}')
+        print(f'Question: {record[1]}')
+        print(f'Answered: {"Y" if record[2] == 1 else "N"}')
+        print()
 
     def view_all(self):
         data = db.select(self.table_name).fetchall()
@@ -29,8 +44,8 @@ class BaseTable():
     def add(self, data):
         db.add(self.table_name, data)
 
-    def edit(self, data):
-        db.update(self.table_name, data)
+    def edit(self):
+        pass
 
     def delete(self):
         db.delete()
@@ -86,12 +101,30 @@ class Questions(BaseTable):
 
 # TODO: #76 add get_random_unanswered_question_function
 
-    def get_random_unanswered_question(self, data=None):
-        pass
+    def get_not_viewed_question(self, data):
+        record = db.select_random(self.table_name, data).fetchone()
+        print(f'ID: {record[0]}')
+        print(f'Question: {record[1]}')
+        print()
+        print()
+
+    def edit_question(self):
+        id = input('ID to Edit: ')
+        record = db.select(self.table_name, criteria={'id': id}).fetchone()
+        print()
+        print(f'ID: {record[0]}')
+        print(f'Question: {record[1]}')
+        print()
+        edited_question = input('Enter the edited question: ')
+        answered = validate_input(
+            f'Question is answered? (Currently: {"Y" if record[2] == 1 else "N"}), Y/N?', {'Y': 1, 'N': 0})
+        update_data = {'question': edited_question, 'answered': answered}
+        db.update(self.table_name, {'id': id}, update_data)
 
     def view_all(self):
         self.print_title_bar()
         data = db.select(self.table_name).fetchall()
+# TODO: #78 Automate this so that it gets the columns and prints them
         for record in data:
             print(f'ID: {record[0]}')
             print(f'Question: {record[1]}')

@@ -72,13 +72,17 @@ class DatabaseManager:
     def select_random(self, table_name, criteria=None):
         criteria = criteria or {}
 
-        query = f'SELECT * FROM {table_name} ORDER BY RANDOM() LIMIT 1'
+        query = f'SELECT * FROM {table_name}'
 
         if criteria:
             placeholders = [f'{column} = ?' for column in criteria.keys()]
             select_criteria = ' AND '.join(placeholders)
             query += f' WHERE {select_criteria}'
 
+        query += ' ORDER BY RANDOM() LIMIT 1'
+        print(f'QUERY: {query}')
+        print(f'KEY: {criteria.keys()}')
+        print(f'VALUE: {criteria.values()}')
         return self._execute(
             query,
             tuple(criteria.values()),
@@ -87,16 +91,16 @@ class DatabaseManager:
     def drop_table(self, table_name):
         self._execute(f'DROP TABLE {table_name}')
 
-    def update(self, table_name, data):
-        placeholders = ', '.joint('?' * len(data))
-        column_names = ', '.join(data.keys())
-        column_values = tuple(data.values())
-
+    def update(self, table_name, criteria, data):
+        update_placeholders = [f'{column} = ?' for column in criteria.keys()]
+        update_criteria = ' AND '.join(update_placeholders)
+        data_placeholders = ', '.join(f'{key} = ?' for key in data.keys())
+        values = tuple(data.values()) + tuple(criteria.values())
         self._execute(
             f'''
-            INSERT INTO {table_name}
-            ({column_names})
-            VALUES ({placeholders});
+            UPDATE {table_name}
+            SET {data_placeholders}
+            WHERE {update_criteria};
             ''',
-            column_values,
+            values,
         )
