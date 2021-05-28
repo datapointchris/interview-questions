@@ -25,7 +25,8 @@ class BaseTable():
         db.drop_table(self.table_name)
 
     def view(self, selection_criteria):
-        user_choice = input(f'Select {selection_criteria}.upper(): ')
+        user_choice = input(f'Select {selection_criteria.upper()}: ')
+        print(f'selection: {selection_criteria}, user_choice: {user_choice}')
         db.select(self.table_name, criteria={selection_criteria: user_choice})
 
     def view_all(self):
