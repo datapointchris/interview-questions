@@ -113,7 +113,7 @@ class Questions(BaseTable):
         print(f'Question: {record[1]}')
         print()
         edited_question = input('Enter the edited question: ')
-        answered = validate_input(f'Question is answered? (Currently: {record[2]}), Y/N', {'Y': 1, 'N': 0})
+        answered = validate_input(f'Question is answered? (Currently: {"Y" if record[2] == 1 else "N"}), Y/N?', {'Y': 1, 'N': 0})
         update_data = {'question': edited_question, 'answered': answered}
         db.update(self.table_name, {'id': id}, update_data)
 
