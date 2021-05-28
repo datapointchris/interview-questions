@@ -24,8 +24,9 @@ class BaseTable():
     def drop_table(self):
         db.drop_table(self.table_name)
 
-    def view(self, criteria):
-        db.select(self.table_name, criteria=criteria)
+    def view(self, selection_criteria):
+        user_choice = input(f'Select {selection_criteria}.upper(): ')
+        db.select(self.table_name, criteria={selection_criteria: user_choice})
 
     def view_all(self):
         data = db.select(self.table_name).fetchall()
@@ -115,6 +116,7 @@ class Questions(BaseTable):
     def view_all(self):
         self.print_title_bar()
         data = db.select(self.table_name).fetchall()
+# TODO: Automate this so that it gets the columns and prints them
         for record in data:
             print(f'ID: {record[0]}')
             print(f'Question: {record[1]}')

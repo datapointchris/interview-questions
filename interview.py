@@ -53,7 +53,7 @@ class Menu():
                             questions.get_not_viewed_question, 
                             {'answered': 0}),
                 'A': Option('View All Questions', 'questions', questions.view_all, None),
-                'B': Option('View a Question by ID', 'questions', questions.view, None),
+                'B': Option('View a Question by ID', 'questions', questions.view, 'id'),
                 'C': Option('Add a question', 'questions', questions.add, None),
                 'D': Option('Edit a question', 
                             'questions', 
