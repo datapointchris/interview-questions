@@ -6,9 +6,9 @@ db = DatabaseManager('interview.db')
 
 def validate_input(input_message, option_map):
     """option_map should be a dictionary of mappings"""
-    choice = input(f'{input_message} ')
+    choice = input(f'{input_message} ').upper()
     while choice not in option_map.keys():
-        choice = input(f'{input_message} ')
+        choice = input(f'{input_message} ').upper()
     return option_map.get(choice)
 
 class BaseTable():
@@ -34,6 +34,9 @@ class BaseTable():
 
     def add(self, data):
         db.add(self.table_name, data)
+
+    def edit(self):
+        pass
 
     def delete(self):
         db.delete()
@@ -98,15 +101,15 @@ class Questions(BaseTable):
 
     def edit_question(self):
         id = input('ID to Edit: ')
-        record = db.select(self.table_name, criteria=id)
+        record = db.select(self.table_name, criteria={'id': id}).fetchone()
         print()
         print(f'ID: {record[0]}')
         print(f'Question: {record[1]}')
         print()
         edited_question = input('Enter the edited question: ')
-        answered = input(f'Question is answered? (Currently: {record[2]}) Y/N').upper()
-            while answered  =='Y'
-        db.update(self.table_name, {'id': id}, data)
+        answered = validate_input(f'Question is answered? (Currently: {record[2]}), Y/N', {'Y': 1, 'N': 0})
+        update_data = {'question': edited_question, 'answered': answered}
+        db.update(self.table_name, {'id': id}, update_data)
 
 
     def view_all(self):

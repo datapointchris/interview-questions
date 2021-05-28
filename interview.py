@@ -57,7 +57,7 @@ class Menu():
                 'C': Option('Add a question', 'questions', questions.add, None),
                 'D': Option('Edit a question', 
                             'questions', 
-                            questions.edit, 
+                            questions.edit_question, 
                             None),
                 'E': Option('Delete a question', 'questions', questions.delete, None),
                 'F': Option('Delete All questions', 'questions', questions.delete_all, None),
