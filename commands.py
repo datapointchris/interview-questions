@@ -29,9 +29,6 @@ class BaseTable():
     def add(self, data):
         db.add(self.table_name, data)
 
-    def edit(self, data):
-        db.update(self.table_name, data)
-
     def delete(self):
         db.delete()
 
@@ -86,8 +83,25 @@ class Questions(BaseTable):
 
 # TODO: #76 add get_random_unanswered_question_function
 
-    def get_random_unanswered_question(self, data=None):
-        pass
+    def get_not_viewed_question(self, data):
+        record = db.select_random(self.table_name, data).fetchone()
+        print(f'ID: {record[0]}')
+        print(f'Question: {record[1]}')
+        print()
+        print()
+
+    def edit_question(self):
+        id = input('ID to Edit: ')
+        record = db.select(self.table_name, criteria=id)
+        print()
+        print(f'ID: {record[0]}')
+        print(f'Question: {record[1]}')
+        print()
+        edited_question = input('Enter the edited question: ')
+        answered = input(f'Question is answered? (Currently: {record[2]}) Y/N').upper()
+            while answered  =='Y'
+        db.update(self.table_name, {'id': id}, data)
+
 
     def view_all(self):
         self.print_title_bar()
