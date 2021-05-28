@@ -27,7 +27,10 @@ class BaseTable():
     def view(self, selection_criteria):
         user_choice = input(f'Select {selection_criteria.upper()}: ')
         print(f'selection: {selection_criteria}, user_choice: {user_choice}')
-        db.select(self.table_name, criteria={selection_criteria: user_choice})
+        record = db.select(self.table_name, criteria={selection_criteria: user_choice}).fetchone()
+        print(f'ID: {record[0]}')
+        print(f'Question: {record[1]}')
+        print()
 
     def view_all(self):
         data = db.select(self.table_name).fetchall()
