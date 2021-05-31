@@ -1,4 +1,3 @@
-import random
 import commands
 import os
 import subprocess
@@ -10,6 +9,17 @@ def clear_screen():
     clear = 'cls' if os.name == 'nt' else 'clear'
     print("\n" * 150)
     subprocess.call(clear, shell=True)
+
+
+def reset_program():
+    make_sure = input('Are you sure you want to reset the program? Y/N')
+    if make_sure.upper() == 'Y':
+        # delete all tables
+        # create all tables
+        # populate tables with defaults
+        print('Program Reset Successfully!')
+    else:
+        print('That was a close call!')
 
 
 def get_user_input(label, required=True):
@@ -32,8 +42,9 @@ class Option:
         return self.command()
 
 
-class Menu():
+class Menu:
     def __init__(self):
+        self.current_menu = 'main'
         self._menus = {
             'main': {
 
@@ -102,13 +113,13 @@ class Menu():
             },
         }
 
-    def option_choice_is_valid(self, choice, options):
+    def _option_choice_is_valid(self, choice, options):
         return choice in options
 
-    def get_command(self, menu):
-        submenu = self._menus.get(menu)
+    def get_command(self):
+        submenu = self._menus.get(self.current_menu)
         choice = input('Choose option: ').upper()
-        while not self.option_choice_is_valid(choice, options=submenu):
+        while not self._option_choice_is_valid(choice, options=submenu):
             print()
             print(f'Invalid option: "{choice}"')
             print()
@@ -116,35 +127,26 @@ class Menu():
         command = submenu.get(choice)
         return command
 
+    def print_menu(self):
+        border = '⑊ '
+        width = (80 - len(self.current_menu)) // 6
+        padding = 5
+        menu_string = f'{border*width}{" "*padding}{self.current_menu.upper()} MENU{" "*padding}{border*width}'
+        q, r = divmod(len(menu_string), len(border))
+        adjusted_menu_string = f'{border*width}{" "*padding}{self.current_menu.upper()} MENU{" "*padding}{" "*r}{border*width}'
+        print(border * (q + r))
+        print(' ' + adjusted_menu_string)
+        print('  ' + border * (q + r))
+        print()
+        submenu = menu._menus.get(self.current_menu)
+        for key, option in submenu.items():
+            print(f'{key} : {option.name}')
+            print()
+
+
+
 # MAIN PROGRAM
 
-
-def print_menu(name):
-    border = '⑊ '
-    width = (80 - len(name)) // 6
-    padding = 5
-    menu_string = f'{border*width}{" "*padding}{name.upper()} MENU{" "*padding}{border*width}'
-    q, r = divmod(len(menu_string), len(border))
-    adjusted_menu_string = f'{border*width}{" "*padding}{name.upper()} MENU{" "*padding}{" "*r}{border*width}'
-    print(border * (q + r))
-    print(' ' + adjusted_menu_string)
-    print('  ' + border * (q + r))
-    print()
-    submenu = menu._menus.get(current_menu)
-    for key, option in submenu.items():
-        print(f'{key} : {option.name}')
-        print()
-
-
-def reset_program():
-    make_sure = input('Are you sure you want to reset the program? Y/N')
-    if make_sure.upper() == 'Y':
-        # delete all tables
-        # create all tables
-        # populate tables with defaults
-        print('Program Reset Successfully!')
-    else:
-        print('That was a close call!')
 
 
 questions = commands.Questions(table_name='questions')
@@ -160,16 +162,15 @@ tips.create_table()
 notes = commands.Notes(table_name='notes')
 notes.create_table()
 
-menu = Menu()
 clear_screen()
-current_menu = 'main'
-print_menu(current_menu)
+menu = Menu()
+
+menu.print_menu()
 
 
 while True:
 
-    command = menu.get_command(menu=current_menu)
-    current_menu = command.menu
+    command = menu.get_command()
     clear_screen()
     command.execute()
-    print_menu(current_menu)
+    menu.print_menu()
