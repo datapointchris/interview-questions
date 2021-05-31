@@ -5,12 +5,6 @@ import sys
 db = DatabaseManager('interview.db')
 
 
-def validate_input(input_message, option_map):
-    """option_map should be a dictionary of mappings"""
-    choice = input(f'{input_message} ').upper()
-    while choice not in option_map.keys():
-        choice = input(f'{input_message} ').upper()
-    return option_map.get(choice)
 
 
 class BaseTable():
@@ -48,6 +42,13 @@ class BaseTable():
         for record in records:
             db.add(self.table_name, record)
 
+    def validate_input(input_message, option_map):
+        """option_map should be a dictionary of mappings"""
+        choice = input(f'{input_message} ').upper()
+        while choice not in option_map.keys():
+            choice = input(f'{input_message} ').upper()
+        return option_map.get(choice)
+    
     def view(self, selection_criteria):
         user_choice = input(f'Select {selection_criteria.upper()}: ')
         # print(f'selection: {selection_criteria}, user_choice: {user_choice}')
@@ -122,7 +123,7 @@ class Questions(BaseTable):
         print(f'Question: {record[1]}')
         print()
         edited_question = input('Enter the edited question: ')
-        answered = validate_input(
+        answered = self.validate_input(
             f'Question is answered? (Currently: {"Y" if record[2] == 1 else "N"}), Y/N?', {'Y': 1, 'N': 0})
         update_data = {'id': id, 'question': edited_question, 'answered': answered}
         db.update(self.table_name, {'id': id}, update_data)
