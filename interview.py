@@ -134,7 +134,8 @@ class Menu:
         padding = 5
         menu_string = f'{border*width}{" "*padding}{self.current_menu.upper()} MENU{" "*padding}{border*width}'
         q, r = divmod(len(menu_string), len(border))
-        adjusted_menu_string = f'{border*width}{" "*padding}{self.current_menu.upper()} MENU{" "*padding}{" "*r}{border*width}'
+        adjusted_menu_string = f'{border*width}{" "*padding}{self.current_menu.upper()} MENU \
+                                 {" "*padding}{" "*r}{border*width}'
         print(border * (q + r))
         print(' ' + adjusted_menu_string)
         print('  ' + border * (q + r))

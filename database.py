@@ -14,10 +14,9 @@ class DatabaseManager:
             cursor.execute(statement, values or [])
             return cursor
 
-    def get_table_col_names(self, table_name):
-        with self.connection:
-            cursor = self.connection.cursor()
-
+    # def get_table_col_names(self, table_name):
+    #     with self.connection:
+    #         cursor = self.connection.cursor()
 
     def create_table(self, table_name, columns):
         columns_with_types = [
