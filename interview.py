@@ -125,6 +125,7 @@ class Menu:
             print()
             choice = input('Choose option: ').upper()
         command = submenu.get(choice)
+        self.current_menu = command.menu
         return command
 
     def print_menu(self):
@@ -144,9 +145,7 @@ class Menu:
             print()
 
 
-
 # MAIN PROGRAM
-
 
 
 questions = commands.Questions(table_name='questions')
