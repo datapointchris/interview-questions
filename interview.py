@@ -87,7 +87,7 @@ class Menu:
                             'answers',
                             answers.add_answer,
                             {'func': questions.view_by_id}),
-                'D': Option('Edit an answer', 'answers', answers.edit, None),
+                'D': Option('Edit an answer', 'answers', answers.edit_answer, {'func': questions.view_by_id}),
                 'E': Option('Delete an answer', 'answers', answers.delete, None),
                 'F': Option('Delete All answers', 'answers', answers.delete_all, None),
                 'G': Option('Reset answers to Default', 'answers', answers.reset_to_default, None),
@@ -151,18 +151,17 @@ class Menu:
 # MAIN PROGRAM
 
 
-questions = commands.Questions(table_name='questions',
-                               defaults=defaults.default_questions)
+questions = commands.Questions(defaults=defaults.default_questions)
 questions.create_table()
 questions.populate_defaults()
 
-answers = commands.Answers(table_name='answers', defaults=None)
+answers = commands.Answers()
 answers.create_table()
 
-tips = commands.Tips(table_name='tips', defaults=None)
+tips = commands.Tips()
 tips.create_table()
 
-notes = commands.Notes(table_name='notes', defaults=None)
+notes = commands.Notes()
 notes.create_table()
 
 clear_screen()
