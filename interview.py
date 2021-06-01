@@ -82,7 +82,10 @@ class Menu:
                 'Q': Option('Quit Program', 'main', sys.exit, None)
             },
             'answers': {
-                'B': Option('View an answer by ID', 'answers', answers.view_by_id, None),
+                'B': Option('View an answer by ID',
+                            'answers',
+                            answers.view_answer_by_id,
+                            {'func': questions.view_by_id}),
                 'C': Option('Add an answer',
                             'answers',
                             answers.add_answer,

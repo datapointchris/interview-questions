@@ -10,7 +10,7 @@ class BaseTable():
 
     def __init__(self, defaults):
         self.defaults = defaults
-    
+
     def print_title_bar(self, name):
         max_width = 80
         space = max_width - len(name) - 10
@@ -43,7 +43,6 @@ class BaseTable():
             choice = input(f'{input_message} ').upper()
         return option_map.get(choice)
 
-
     def populate_defaults(self):
         for record in self.defaults:
             db.add(self.table_name, record)
@@ -51,7 +50,6 @@ class BaseTable():
     def view_by_id(self, id=None, skip_title=None):
         if id is None:
             id = input('Select ID: ')
-        # print(f'selection: {selection_criteria}, user_choice: {user_choice}')
         cursor = db.select(self.table_name, criteria={'id': id})
         if skip_title is None:
             self.print_title_bar('View by ID')
@@ -80,7 +78,8 @@ class BaseTable():
 
     def reset_to_default(self):
         self.delete_all()
-        self.populate_defaults()
+        if self.defaults:
+            self.populate_defaults()
 
     def drop_table(self):
         db.drop_table(self.table_name)
@@ -161,6 +160,25 @@ class Answers(BaseTable):
             'question_id': 'integer not null',
             'answer': 'text not null',
         })
+
+    def view_answer_by_id(self, data):
+        id = input('ID to View: ')
+        record = db.select(self.table_name, criteria={'id': id}).fetchone()
+        self.print_title_bar('View by ID')
+        if record:
+            print()
+            print('Question for Reference:')
+            print()
+            print_question = data.get('func')
+            print_question(id=record[1], skip_title=True)
+            print()
+            self.view_by_id(id=id, skip_title=True)
+            print()
+        else:
+            print('No matching records found.')
+            print()
+        print('-' * 80)
+        print()
 
     def add_answer(self, data):
         question_id = data.get('question_id')
