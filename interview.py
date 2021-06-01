@@ -134,13 +134,12 @@ class Menu:
         padding = 5
         menu_string = f'{border*width}{" "*padding}{self.current_menu.upper()} MENU{" "*padding}{border*width}'
         q, r = divmod(len(menu_string), len(border))
-        adjusted_menu_string = f'{border*width}{" "*padding}{self.current_menu.upper()} MENU \
-                                 {" "*padding}{" "*r}{border*width}'
+        adjusted_menu_string = f'{border*width}{" "*padding}{self.current_menu.upper()} MENU{" "*padding}{" "*r}{border*width}'
         print(border * (q + r))
         print(' ' + adjusted_menu_string)
         print('  ' + border * (q + r))
         print()
-        submenu = menu._menus.get(self.current_menu)
+        submenu = self._menus.get(self.current_menu)
         for key, option in submenu.items():
             print(f'{key} : {option.name}')
             print()
@@ -171,6 +170,7 @@ menu.print_menu()
 while True:
 
     command = menu.get_command()
+
     clear_screen()
     command.execute()
     menu.print_menu()

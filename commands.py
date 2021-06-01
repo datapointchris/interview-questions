@@ -62,7 +62,9 @@ class BaseTable():
         self.print_records(cursor)
 
     def add(self, data):
-        db.add(self.table_name, data)
+        input_data = input(f'Enter new question: ')
+        table_data = {data: input_data}
+        db.add(self.table_name, table_data)
 
     def edit(self):
         pass
@@ -115,6 +117,11 @@ class Questions(BaseTable):
         self.print_title_bar(name)
         self.print_records(cursor)
 
+    def add(self):
+        input_data = input(f'Enter new question: ')
+        table_data = {'question': input_data, 'answered': 0}
+        db.add(self.table_name, table_data)
+
     def edit_question(self):
         id = input('ID to Edit: ')
         record = db.select(self.table_name, criteria={'id': id}).fetchone()
@@ -133,6 +140,7 @@ class Answers(BaseTable):
     def create_table(self, data=None):
         db.create_table('answers', {
             'id': 'integer primary key autoincrement',
+            'question_id': 'integer not null',
             'answer': 'text not null',
         })
 
@@ -141,6 +149,7 @@ class Tips(BaseTable):
     def create_table(self, data=None):
         db.create_table('tips', {
             'id': 'integer primary key autoincrement',
+            'question_id': 'integer not null',
             'tip': 'text not null',
         })
 
@@ -149,6 +158,7 @@ class Notes(BaseTable):
     def create_table(self, data=None):
         db.create_table('notes', {
             'id': 'integer primary key autoincrement',
+            'question_id': 'integer not null',
             'note': 'text not null',
         })
 
