@@ -5,13 +5,12 @@ import sys
 db = DatabaseManager('interview.db')
 
 
-
-
 class BaseTable():
     '''Base class for handling all common table functions'''
 
-    def __init__(self, table_name):
+    def __init__(self, table_name, defaults):
         self.table_name = table_name
+        self.defaults = defaults
 
     def print_title_bar(self, name):
         max_width = 80
@@ -29,8 +28,8 @@ class BaseTable():
         if records:
             for i, record in enumerate(records):
                 for column, record_item in zip(columns, record):
-                    print(f'{column.upper()}:  '
-                          f'{"Y" if record_item == 1 else "N" if record_item == 0 else record_item}')
+                    answered_column = f'{"Y" if record_item == 1 else "N" if record_item == 0 else record_item}'
+                    print(f'{column.upper()}:  {answered_column if column == "answered" else record_item}')
                 print()
         else:
             print('No matching records found.')
@@ -38,8 +37,11 @@ class BaseTable():
         print('-' * 80)
         print()
 
-    def populate_defaults(self, records):
-        for record in records:
+    def create_table():
+        pass
+
+    def populate_defaults(self):
+        for record in self.defaults:
             db.add(self.table_name, record)
 
     def validate_input(self, input_message, option_map):
@@ -48,7 +50,7 @@ class BaseTable():
         while choice not in option_map.keys():
             choice = input(f'{input_message} ').upper()
         return option_map.get(choice)
-    
+
     def view(self, selection_criteria):
         user_choice = input(f'Select {selection_criteria.upper()}: ')
         # print(f'selection: {selection_criteria}, user_choice: {user_choice}')
@@ -74,11 +76,12 @@ class BaseTable():
         db.delete(self.table_name, {'id': delete_id})
 
     def delete_all(self):
-        delete_id = input('ID to delete: ')
-        db.delete(self.table_name, {'id': delete_id})
+        self.drop_table()
+        self.create_table()
 
-    def reset(self):
-        pass
+    def reset_to_default(self):
+        self.delete_all()
+        self.populate_defaults()
 
     def drop_table(self):
         db.drop_table(self.table_name)
@@ -102,7 +105,7 @@ class Jobs(BaseTable):  # this class and table isn't going to be used in v1.0
 
 class Questions(BaseTable):
 
-    def create_table(self, data=None):
+    def create_table(self):
         db.create_table('questions', {
             'id': 'integer primary key autoincrement',
             'question': 'text not null',
