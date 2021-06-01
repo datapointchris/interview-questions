@@ -42,7 +42,7 @@ class BaseTable():
         for record in records:
             db.add(self.table_name, record)
 
-    def validate_input(input_message, option_map):
+    def validate_input(self, input_message, option_map):
         """option_map should be a dictionary of mappings"""
         choice = input(f'{input_message} ').upper()
         while choice not in option_map.keys():
@@ -117,7 +117,12 @@ class Questions(BaseTable):
         self.print_title_bar(name)
         self.print_records(cursor)
 
-    def add(self):
+    def view_answered(self):
+        cursor = db.select(self.table_name, criteria={'answered': 1})
+        self.print_title_bar('Answered Questions')
+        self.print_records(cursor)
+
+    def add_question(self):
         input_data = input(f'Enter new question: ')
         table_data = {'question': input_data, 'answered': 0}
         db.add(self.table_name, table_data)
