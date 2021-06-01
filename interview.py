@@ -65,16 +65,17 @@ class Menu:
                             'questions',
                             questions.get_random_question,
                             {'answered': 0}),
+                '3': Option('View Answered Questions', 'questions', questions.view_answered, None),
                 'A': Option('View All Questions', 'questions', questions.view_all, None),
                 'B': Option('View a Question by ID', 'questions', questions.view, 'id'),
-                'C': Option('Add a question', 'questions', questions.add, None),
+                'C': Option('Add a question', 'questions', questions.add_question, None),
                 'D': Option('Edit a question',
                             'questions',
                             questions.edit_question,
                             None),
                 'E': Option('Delete a question', 'questions', questions.delete, None),
                 'F': Option('Delete All questions', 'questions', questions.delete_all, None),
-                'G': Option('Reset questions to Default', 'questions', questions.reset, None),
+                'G': Option('Reset questions to Default', 'questions', questions.reset_to_default, None),
                 'M': Option('Return to Main Menu', 'main', clear_screen, None),
                 'Q': Option('Quit Program', 'main', sys.exit, None)
             },
@@ -85,7 +86,7 @@ class Menu:
                 'D': Option('Edit a answer', 'answers', answers.edit, None),
                 'E': Option('Delete a answer', 'answers', answers.delete, None),
                 'F': Option('Delete All answers', 'answers', answers.delete_all, None),
-                'G': Option('Reset answers to Default', 'answers', answers.reset, None),
+                'G': Option('Reset answers to Default', 'answers', answers.reset_to_default, None),
                 'M': Option('Return to Main Menu', 'main', clear_screen, None),
                 'Q': Option('Quit Program', 'main', sys.exit, None)
             },
@@ -96,7 +97,7 @@ class Menu:
                 'D': Option('Edit a note', 'notes', notes.edit, None),
                 'E': Option('Delete a note', 'notes', notes.delete, None),
                 'F': Option('Delete All notes', 'notes', notes.delete_all, None),
-                'G': Option('Reset notes to Default', 'notes', notes.reset, None),
+                'G': Option('Reset notes to Default', 'notes', notes.reset_to_default, None),
                 'M': Option('Return to Main Menu', 'main', clear_screen, None),
                 'Q': Option('Quit Program', 'main', sys.exit, None)
             },
@@ -107,7 +108,7 @@ class Menu:
                 'D': Option('Edit a tip', 'tips', tips.edit, None),
                 'E': Option('Delete a tip', 'tips', tips.delete, None),
                 'F': Option('Delete All tips', 'tips', tips.delete_all, None),
-                'G': Option('Reset tips to Default', 'tips', tips.reset, None),
+                'G': Option('Reset tips to Default', 'tips', tips.reset_to_default, None),
                 'M': Option('Return to Main Menu', 'main', clear_screen, 'main'),
                 'Q': Option('Quit Program', 'main', sys.exit, None)
             },
@@ -134,13 +135,12 @@ class Menu:
         padding = 5
         menu_string = f'{border*width}{" "*padding}{self.current_menu.upper()} MENU{" "*padding}{border*width}'
         q, r = divmod(len(menu_string), len(border))
-        adjusted_menu_string = f'{border*width}{" "*padding}{self.current_menu.upper()} MENU \
-                                 {" "*padding}{" "*r}{border*width}'
+        adjusted_menu_string = f'{border*width}{" "*padding}{self.current_menu.upper()} MENU{" "*padding}{" "*r}{border*width}'
         print(border * (q + r))
         print(' ' + adjusted_menu_string)
         print('  ' + border * (q + r))
         print()
-        submenu = menu._menus.get(self.current_menu)
+        submenu = self._menus.get(self.current_menu)
         for key, option in submenu.items():
             print(f'{key} : {option.name}')
             print()
@@ -149,17 +149,18 @@ class Menu:
 # MAIN PROGRAM
 
 
-questions = commands.Questions(table_name='questions')
+questions = commands.Questions(table_name='questions',
+                               defaults=defaults.default_questions)
 questions.create_table()
-questions.populate_defaults(defaults.default_questions)
+questions.populate_defaults()
 
-answers = commands.Answers(table_name='answers')
+answers = commands.Answers(table_name='answers', defaults=None)
 answers.create_table()
 
-tips = commands.Tips(table_name='tips')
+tips = commands.Tips(table_name='tips', defaults=None)
 tips.create_table()
 
-notes = commands.Notes(table_name='notes')
+notes = commands.Notes(table_name='notes', defaults=None)
 notes.create_table()
 
 clear_screen()
@@ -171,6 +172,7 @@ menu.print_menu()
 while True:
 
     command = menu.get_command()
+
     clear_screen()
     command.execute()
     menu.print_menu()

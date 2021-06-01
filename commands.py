@@ -5,13 +5,12 @@ import sys
 db = DatabaseManager('interview.db')
 
 
-
-
 class BaseTable():
     '''Base class for handling all common table functions'''
 
-    def __init__(self, table_name):
+    def __init__(self, table_name, defaults):
         self.table_name = table_name
+        self.defaults = defaults
 
     def print_title_bar(self, name):
         max_width = 80
@@ -29,8 +28,8 @@ class BaseTable():
         if records:
             for i, record in enumerate(records):
                 for column, record_item in zip(columns, record):
-                    print(f'{column.upper()}:  '
-                          f'{"Y" if record_item == 1 else "N" if record_item == 0 else record_item}')
+                    answered_column = f'{"Y" if record_item == 1 else "N" if record_item == 0 else record_item}'
+                    print(f'{column.upper()}:  {answered_column if column == "answered" else record_item}')
                 print()
         else:
             print('No matching records found.')
@@ -38,17 +37,20 @@ class BaseTable():
         print('-' * 80)
         print()
 
-    def populate_defaults(self, records):
-        for record in records:
+    def create_table():
+        pass
+
+    def populate_defaults(self):
+        for record in self.defaults:
             db.add(self.table_name, record)
 
-    def validate_input(input_message, option_map):
+    def validate_input(self, input_message, option_map):
         """option_map should be a dictionary of mappings"""
         choice = input(f'{input_message} ').upper()
         while choice not in option_map.keys():
             choice = input(f'{input_message} ').upper()
         return option_map.get(choice)
-    
+
     def view(self, selection_criteria):
         user_choice = input(f'Select {selection_criteria.upper()}: ')
         # print(f'selection: {selection_criteria}, user_choice: {user_choice}')
@@ -62,19 +64,24 @@ class BaseTable():
         self.print_records(cursor)
 
     def add(self, data):
-        db.add(self.table_name, data)
+        input_data = input(f'Enter new question: ')
+        table_data = {data: input_data}
+        db.add(self.table_name, table_data)
 
     def edit(self):
         pass
 
     def delete(self):
-        db.delete()
+        delete_id = input('ID to delete: ')
+        db.delete(self.table_name, {'id': delete_id})
 
     def delete_all(self):
-        db.delete()
+        self.drop_table()
+        self.create_table()
 
-    def reset(self):
-        pass
+    def reset_to_default(self):
+        self.delete_all()
+        self.populate_defaults()
 
     def drop_table(self):
         db.drop_table(self.table_name)
@@ -98,7 +105,7 @@ class Jobs(BaseTable):  # this class and table isn't going to be used in v1.0
 
 class Questions(BaseTable):
 
-    def create_table(self, data=None):
+    def create_table(self):
         db.create_table('questions', {
             'id': 'integer primary key autoincrement',
             'question': 'text not null',
@@ -114,6 +121,16 @@ class Questions(BaseTable):
             name = 'Random Question'
         self.print_title_bar(name)
         self.print_records(cursor)
+
+    def view_answered(self):
+        cursor = db.select(self.table_name, criteria={'answered': 1})
+        self.print_title_bar('Answered Questions')
+        self.print_records(cursor)
+
+    def add_question(self):
+        input_data = input(f'Enter new question: ')
+        table_data = {'question': input_data, 'answered': 0}
+        db.add(self.table_name, table_data)
 
     def edit_question(self):
         id = input('ID to Edit: ')
@@ -133,6 +150,7 @@ class Answers(BaseTable):
     def create_table(self, data=None):
         db.create_table('answers', {
             'id': 'integer primary key autoincrement',
+            'question_id': 'integer not null',
             'answer': 'text not null',
         })
 
@@ -141,6 +159,7 @@ class Tips(BaseTable):
     def create_table(self, data=None):
         db.create_table('tips', {
             'id': 'integer primary key autoincrement',
+            'question_id': 'integer not null',
             'tip': 'text not null',
         })
 
@@ -149,6 +168,7 @@ class Notes(BaseTable):
     def create_table(self, data=None):
         db.create_table('notes', {
             'id': 'integer primary key autoincrement',
+            'question_id': 'integer not null',
             'note': 'text not null',
         })
 
