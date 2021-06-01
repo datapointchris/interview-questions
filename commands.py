@@ -70,10 +70,12 @@ class BaseTable():
         pass
 
     def delete(self):
-        db.delete()
+        delete_id = input('ID to delete: ')
+        db.delete(self.table_name, {'id': delete_id})
 
     def delete_all(self):
-        db.delete()
+        delete_id = input('ID to delete: ')
+        db.delete(self.table_name, {'id': delete_id})
 
     def reset(self):
         pass

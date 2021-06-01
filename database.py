@@ -47,7 +47,7 @@ class DatabaseManager:
     def delete(self, table_name, criteria):
         placeholders = [f'{column} = ?' for column in criteria.keys()]
         delete_criteria = ' AND '.join(placeholders)
-        self._execture(
+        self._execute(
             f'''
             DELETE FROM {table_name}
             WHERE {delete_criteria};
