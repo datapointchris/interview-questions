@@ -51,10 +51,11 @@ class BaseTable():
             choice = input(f'{input_message} ').upper()
         return option_map.get(choice)
 
-    def view(self, selection_criteria):
-        user_choice = input(f'Select {selection_criteria.upper()}: ')
+    def view_by_id(self, id=None):
+        if id is None:
+            id = input('Select ID: ')
         # print(f'selection: {selection_criteria}, user_choice: {user_choice}')
-        cursor = db.select(self.table_name, criteria={selection_criteria: user_choice})
+        cursor = db.select(self.table_name, criteria={'id': id})
         self.print_title_bar('View by ID')
         self.print_records(cursor)
 
@@ -154,6 +155,16 @@ class Answers(BaseTable):
             'answer': 'text not null',
         })
 
+    def add_answer(self, data):
+        question_id = data.get('question_id')
+        if question_id is None:
+            question_id = input('Enter question ID: ')
+        print_question = data.get('func')
+        print_question(question_id)
+        print()
+        new_answer = input('Enter new answer: ')
+        table_data = {'question_id': question_id, 'answer': new_answer}
+        db.add(self.table_name, table_data)
 
 class Tips(BaseTable):
     def create_table(self, data=None):
