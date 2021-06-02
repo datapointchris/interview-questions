@@ -8,8 +8,7 @@ db = DatabaseManager('interview.db')
 class BaseTable():
     '''Base class for handling all common table functions'''
 
-    def __init__(self, table_name, defaults):
-        self.table_name = table_name
+    def __init__(self, defaults):
         self.defaults = defaults
 
     def print_title_bar(self, name):
@@ -37,13 +36,6 @@ class BaseTable():
         print('-' * 80)
         print()
 
-    def create_table():
-        pass
-
-    def populate_defaults(self):
-        for record in self.defaults:
-            db.add(self.table_name, record)
-
     def validate_input(self, input_message, option_map):
         """option_map should be a dictionary of mappings"""
         choice = input(f'{input_message} ').upper()
@@ -51,11 +43,16 @@ class BaseTable():
             choice = input(f'{input_message} ').upper()
         return option_map.get(choice)
 
-    def view(self, selection_criteria):
-        user_choice = input(f'Select {selection_criteria.upper()}: ')
-        # print(f'selection: {selection_criteria}, user_choice: {user_choice}')
-        cursor = db.select(self.table_name, criteria={selection_criteria: user_choice})
-        self.print_title_bar('View by ID')
+    def populate_defaults(self):
+        for record in self.defaults:
+            db.add(self.table_name, record)
+
+    def view_by_id(self, id=None, skip_title=None):
+        if id is None:
+            id = input('Select ID: ')
+        cursor = db.select(self.table_name, criteria={'id': id})
+        if skip_title is None:
+            self.print_title_bar('View by ID')
         self.print_records(cursor)
 
     def view_all(self):
@@ -81,7 +78,8 @@ class BaseTable():
 
     def reset_to_default(self):
         self.delete_all()
-        self.populate_defaults()
+        if self.defaults:
+            self.populate_defaults()
 
     def drop_table(self):
         db.drop_table(self.table_name)
@@ -105,8 +103,12 @@ class Jobs(BaseTable):  # this class and table isn't going to be used in v1.0
 
 class Questions(BaseTable):
 
+    def __init__(self, defaults=None):
+        super().__init__(defaults)
+        self.table_name = 'questions'
+
     def create_table(self):
-        db.create_table('questions', {
+        db.create_table(self.table_name, {
             'id': 'integer primary key autoincrement',
             'question': 'text not null',
             'answered': 'integer'
@@ -147,17 +149,73 @@ class Questions(BaseTable):
 
 
 class Answers(BaseTable):
-    def create_table(self, data=None):
-        db.create_table('answers', {
+
+    def __init__(self, defaults=None):
+        super().__init__(defaults)
+        self.table_name = 'answers'
+
+    def create_table(self):
+        db.create_table(self.table_name, {
             'id': 'integer primary key autoincrement',
             'question_id': 'integer not null',
             'answer': 'text not null',
         })
 
+    def view_answer_by_id(self, data):
+        id = input('ID to View: ')
+        record = db.select(self.table_name, criteria={'id': id}).fetchone()
+        self.print_title_bar('View by ID')
+        if record:
+            print()
+            print('Question for Reference:')
+            print()
+            print_question = data.get('func')
+            print_question(id=record[1], skip_title=True)
+            print()
+            self.view_by_id(id=id, skip_title=True)
+            print()
+        else:
+            print('No matching records found.')
+            print()
+        print('-' * 80)
+        print()
+
+    def add_answer(self, data):
+        question_id = data.get('question_id')
+        if question_id is None:
+            question_id = input('Enter question ID: ')
+        print_question = data.get('func')
+        print_question(id=question_id, skip_title=True)
+        print()
+        new_answer = input('Enter new answer: ')
+        table_data = {'question_id': question_id, 'answer': new_answer}
+        db.add(self.table_name, table_data)
+
+    def edit_answer(self, data):
+        id = input('ID to Edit: ')
+        record = db.select(self.table_name, criteria={'id': id}).fetchone()
+        print()
+        print('Question for Reference:')
+        print()
+        print_question = data.get('func')
+        print_question(id=record[1], skip_title=True)
+        print()
+        self.view_by_id(id=id, skip_title=True)
+        print()
+        edited_answer = input('Enter the new answer: ')
+
+        update_data = {'id': id, 'question_id': record[1], 'answer': edited_answer}
+        db.update(self.table_name, {'id': id}, update_data)
+
 
 class Tips(BaseTable):
-    def create_table(self, data=None):
-        db.create_table('tips', {
+
+    def __init__(self, defaults=None):
+        super().__init__(defaults)
+        self.table_name = 'tips'
+
+    def create_table(self):
+        db.create_table(self.table_name, {
             'id': 'integer primary key autoincrement',
             'question_id': 'integer not null',
             'tip': 'text not null',
@@ -165,8 +223,13 @@ class Tips(BaseTable):
 
 
 class Notes(BaseTable):
-    def create_table(self, data=None):
-        db.create_table('notes', {
+
+    def __init__(self, defaults=None):
+        super().__init__(defaults)
+        self.table_name = 'notes'
+
+    def create_table(self):
+        db.create_table(self.table_name, {
             'id': 'integer primary key autoincrement',
             'question_id': 'integer not null',
             'note': 'text not null',
