@@ -35,7 +35,7 @@ class DatabaseManager:
         column_names = ', '.join(data.keys())
         column_values = tuple(data.values())
 
-        self._execute(
+        cursor = self._execute(
             f'''
             INSERT OR IGNORE INTO {table_name}
             ({column_names})
@@ -43,6 +43,7 @@ class DatabaseManager:
             ''',
             column_values,
         )
+        return cursor
 
     def delete(self, table_name, criteria):
         placeholders = [f'{column} = ?' for column in criteria.keys()]
