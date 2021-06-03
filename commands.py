@@ -47,14 +47,6 @@ class BaseTable():
         for record in self.defaults:
             db.add(self.table_name, record)
 
-    def view_by_id(self, id=None, skip_title=None):
-        if id is None:
-            id = input('Select ID: ')
-        cursor = db.select(self.table_name, criteria={'id': id})
-        if skip_title is None:
-            self.print_title_bar('View by ID')
-        self.print_records(cursor)
-
     def delete(self):
         delete_id = input('ID to delete: ')
         db.delete(self.table_name, {'id': delete_id})
@@ -121,6 +113,14 @@ class Questions(BaseTable):
         self.print_title_bar(f'View All {self.table_name}')
         self.print_records(cursor)
 
+    def view_question_by_id(self, id=None, skip_title=None):
+        if id is None:
+            id = input('Select ID: ')
+        cursor = db.select(self.table_name, criteria={'id': id})
+        if skip_title is None:
+            self.print_title_bar('View by ID')
+        self.print_records(cursor)
+
     def add_question(self):
         input_data = input(f'Enter new question: ')
         table_data = {'question': input_data, 'answered': 0}
@@ -164,7 +164,7 @@ class Answers(BaseTable):
             print_question = data.get('func')
             print_question(id=record[1], skip_title=True)
             print()
-            self.view_by_id(id=id, skip_title=True)
+            self.(id=id, skip_title=True)
             print()
         else:
             print('No matching records found.')
@@ -192,7 +192,7 @@ class Answers(BaseTable):
         print_question = data.get('func')
         print_question(id=record[1], skip_title=True)
         print()
-        self.view_by_id(id=id, skip_title=True)
+        self.(id=id, skip_title=True)
         print()
         edited_answer = input('Enter the new answer: ')
 
@@ -224,7 +224,7 @@ class Notes(BaseTable):
             print_question = data.get('func')
             print_question(id=record[1], skip_title=True)
             print()
-            self.view_by_id(id=id, skip_title=True)
+            self.(id=id, skip_title=True)
             print()
         else:
             print('No matching records found.')
@@ -252,7 +252,7 @@ class Notes(BaseTable):
         print_question = data.get('func')
         print_question(id=record[1], skip_title=True)
         print()
-        self.view_by_id(id=id, skip_title=True)
+        self.(id=id, skip_title=True)
         print()
         edited_note = input('Enter the new note: ')
 
@@ -284,7 +284,7 @@ class Tips(BaseTable):
             print_question = data.get('func')
             print_question(id=record[1], skip_title=True)
             print()
-            self.view_by_id(id=id, skip_title=True)
+            self.(id=id, skip_title=True)
             print()
         else:
             print('No matching records found.')
@@ -312,7 +312,7 @@ class Tips(BaseTable):
         print_question = data.get('func')
         print_question(id=record[1], skip_title=True)
         print()
-        self.view_by_id(id=id, skip_title=True)
+        self.(id=id, skip_title=True)
         print()
         edited_tip = input('Enter the new tip: ')
 
