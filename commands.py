@@ -208,20 +208,6 @@ class Answers(BaseTable):
         db.update(self.table_name, {'id': id}, update_data)
 
 
-class Tips(BaseTable):
-
-    def __init__(self, defaults=None):
-        super().__init__(defaults)
-        self.table_name = 'tips'
-
-    def create_table(self):
-        db.create_table(self.table_name, {
-            'id': 'integer primary key autoincrement',
-            'question_id': 'integer not null',
-            'tip': 'text not null',
-        })
-
-
 class Notes(BaseTable):
 
     def __init__(self, defaults=None):
@@ -235,5 +221,108 @@ class Notes(BaseTable):
             'note': 'text not null',
         })
 
-    def view_notes(self, criteria=None):
-        db.select(self.table_name, criteria=question_id)
+    def view_note_by_id(self, data):
+        id = input('ID to View: ')
+        record = db.select(self.table_name, criteria={'id': id}).fetchone()
+        self.print_title_bar('View by ID')
+        if record:
+            print()
+            print('Question for Reference:')
+            print()
+            print_question = data.get('func')
+            print_question(id=record[1], skip_title=True)
+            print()
+            self.view_by_id(id=id, skip_title=True)
+            print()
+        else:
+            print('No matching records found.')
+            print()
+        print('-' * 80)
+        print()
+
+    def add_note(self, data):
+        question_id = data.get('question_id')
+        if question_id is None:
+            question_id = input('Enter question ID: ')
+        print_question = data.get('func')
+        print_question(id=question_id, skip_title=True)
+        print()
+        new_note = input('Enter new note: ')
+        table_data = {'question_id': question_id, 'note': new_note}
+        db.add(self.table_name, table_data)
+
+    def edit_note(self, data):
+        id = input('ID to Edit: ')
+        record = db.select(self.table_name, criteria={'id': id}).fetchone()
+        print()
+        print('Question for Reference:')
+        print()
+        print_question = data.get('func')
+        print_question(id=record[1], skip_title=True)
+        print()
+        self.view_by_id(id=id, skip_title=True)
+        print()
+        edited_note = input('Enter the new note: ')
+
+        update_data = {'id': id, 'question_id': record[1], 'note': edited_note}
+        db.update(self.table_name, {'id': id}, update_data)
+
+
+class Tips(BaseTable):
+
+    def __init__(self, defaults=None):
+        super().__init__(defaults)
+        self.table_name = 'tips'
+
+    def create_table(self):
+        db.create_table(self.table_name, {
+            'id': 'integer primary key autoincrement',
+            'question_id': 'integer not null',
+            'tip': 'text not null',
+        })
+
+    def view_tip_by_id(self, data):
+        id = input('ID to View: ')
+        record = db.select(self.table_name, criteria={'id': id}).fetchone()
+        self.print_title_bar('View by ID')
+        if record:
+            print()
+            print('Question for Reference:')
+            print()
+            print_question = data.get('func')
+            print_question(id=record[1], skip_title=True)
+            print()
+            self.view_by_id(id=id, skip_title=True)
+            print()
+        else:
+            print('No matching records found.')
+            print()
+        print('-' * 80)
+        print()
+
+    def add_tip(self, data):
+        question_id = data.get('question_id')
+        if question_id is None:
+            question_id = input('Enter question ID: ')
+        print_question = data.get('func')
+        print_question(id=question_id, skip_title=True)
+        print()
+        new_tip = input('Enter new tip: ')
+        table_data = {'question_id': question_id, 'tip': new_tip}
+        db.add(self.table_name, table_data)
+
+    def edit_tip(self, data):
+        id = input('ID to Edit: ')
+        record = db.select(self.table_name, criteria={'id': id}).fetchone()
+        print()
+        print('Question for Reference:')
+        print()
+        print_question = data.get('func')
+        print_question(id=record[1], skip_title=True)
+        print()
+        self.view_by_id(id=id, skip_title=True)
+        print()
+        edited_tip = input('Enter the new tip: ')
+
+        update_data = {'id': id, 'question_id': record[1], 'tip': edited_tip}
+        db.update(self.table_name, {'id': id}, update_data)
