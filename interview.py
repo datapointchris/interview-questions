@@ -81,6 +81,26 @@ class Menu:
                 'M': Option('Return to Main Menu', 'main', clear_screen, None),
                 'Q': Option('Quit Program', 'main', sys.exit, None)
             },
+            'single_question': {
+                '1': Option('Answer this question', 'questions', answers.add_answer, None),
+                '2': Option('Get a Random Unanswered Question',
+                            'questions',
+                            questions.get_random_question,
+                            {'answered': 0}),
+                '3': Option('View Answered Questions', 'questions', questions.view_answered, None),
+                'A': Option('View All Questions', 'questions', questions.view_all, None),
+                'B': Option('View a Question by ID', 'questions', questions.view_by_id, None),
+                'C': Option('Add a question', 'questions', questions.add_question, None),
+                'D': Option('Edit a question',
+                            'questions',
+                            questions.edit_question,
+                            None),
+                'E': Option('Delete a question', 'questions', questions.delete, None),
+                'F': Option('Delete All questions', 'questions', questions.delete_all, None),
+                'G': Option('Reset questions to Default', 'questions', questions.reset_to_default, None),
+                'M': Option('Return to Main Menu', 'main', clear_screen, None),
+                'Q': Option('Quit Program', 'main', sys.exit, None)
+            },
             'answers': {
                 'B': Option('View an answer by ID',
                             'answers',

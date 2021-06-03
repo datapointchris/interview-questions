@@ -60,11 +60,6 @@ class BaseTable():
         self.print_title_bar(f'View All {self.table_name}')
         self.print_records(cursor)
 
-    def add(self, data):
-        input_data = input(f'Enter new question: ')
-        table_data = {data: input_data}
-        db.add(self.table_name, table_data)
-
     def edit(self):
         pass
 
