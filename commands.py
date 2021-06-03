@@ -143,10 +143,13 @@ class Questions(BaseTable):
         inserted_id = return_cursor.lastrowid
         cursor = db.select(self.table_name, criteria={'id': inserted_id})
         record = cursor.fetchone()
-        return_message = f'''Successfully Added Question: \n\n'
-                            {self.question_printer(record)}
-                            '''
-        # return_message = ''
+        question_id, question, answered = record
+        return_message = (
+            f'~~ Successfully Added Question ~~\n'
+            f'ID: {question_id}\n'
+            f'Question: {question}\n'
+            f'Answered: {"Y" if answered == 1 else "N" if answered == 0 else answered}'
+        )
         return_data = None
         return (return_message, return_data)
 

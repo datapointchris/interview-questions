@@ -199,7 +199,8 @@ menu.print_menu()
 while True:
 
     command = menu.get_command()
-
     clear_screen()
     return_message, return_data = command.execute()
+    clear_screen()
+    print(return_message)
     menu.print_menu()
