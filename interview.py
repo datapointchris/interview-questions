@@ -54,10 +54,10 @@ class Menu:
                             'questions',
                             questions.get_random_question,
                             {'answered': 0}),
-                '3': Option('Answers Menu', 'answers', clear_screen, None),
-                '4': Option('Notes Menu', 'notes', clear_screen, None),
-                '5': Option('Tips Menu', 'tips', clear_screen, None),
-                'J': Option('View All Questions', 'questions', questions.view_all, None),
+                '3': Option('Questions Menu', 'questions', clear_screen, None),
+                '4': Option('Answers Menu', 'answers', clear_screen, None),
+                '5': Option('Notes Menu', 'notes', clear_screen, None),
+                '6': Option('Tips Menu', 'tips', clear_screen, None),
                 'R': Option('Reset Program to Defaults', 'main', reset_program, None),
                 'Q': Option('Quit Program', 'main', sys.exit, None)
             },
@@ -98,9 +98,9 @@ class Menu:
                 'Q': Option('Quit Program', 'main', sys.exit, None)
             },
             'notes': {
-                'B': Option('View a note by ID', 'notes', notes.view_by_id, 'id'),
-                'C': Option('Add a note', 'notes', notes.add, None),
-                'D': Option('Edit a note', 'notes', notes.edit, None),
+                'B': Option('View a note by ID', 'notes', notes.view_note_by_id, {'func': questions.view_by_id}),
+                'C': Option('Add a note', 'notes', notes.add_note, {'func': questions.view_by_id}),
+                'D': Option('Edit a note', 'notes', notes.edit_note, {'func': questions.view_by_id}),
                 'E': Option('Delete a note', 'notes', notes.delete, None),
                 'F': Option('Delete All notes', 'notes', notes.delete_all, None),
                 'G': Option('Reset notes to Default', 'notes', notes.reset_to_default, None),
@@ -108,13 +108,13 @@ class Menu:
                 'Q': Option('Quit Program', 'main', sys.exit, None)
             },
             'tips': {
-                'B': Option('View a tip by ID', 'tips', tips.view_by_id, 'id'),
-                'C': Option('Add a tip', 'tips', tips.add, None),
-                'D': Option('Edit a tip', 'tips', tips.edit, None),
+                'B': Option('View a tip by ID', 'tips', tips.view_tip_by_id, {'func': questions.view_by_id}),
+                'C': Option('Add a tip', 'tips', tips.add_tip, {'func': questions.view_by_id}),
+                'D': Option('Edit a tip', 'tips', tips.edit_tip, {'func': questions.view_by_id}),
                 'E': Option('Delete a tip', 'tips', tips.delete, None),
                 'F': Option('Delete All tips', 'tips', tips.delete_all, None),
                 'G': Option('Reset tips to Default', 'tips', tips.reset_to_default, None),
-                'M': Option('Return to Main Menu', 'main', clear_screen, 'main'),
+                'M': Option('Return to Main Menu', 'main', clear_screen, None),
                 'Q': Option('Quit Program', 'main', sys.exit, None)
             },
         }
