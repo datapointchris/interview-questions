@@ -55,14 +55,6 @@ class BaseTable():
             self.print_title_bar('View by ID')
         self.print_records(cursor)
 
-    def view_all(self):
-        cursor = db.select(self.table_name)
-        self.print_title_bar(f'View All {self.table_name}')
-        self.print_records(cursor)
-
-    def edit(self):
-        pass
-
     def delete(self):
         delete_id = input('ID to delete: ')
         db.delete(self.table_name, {'id': delete_id})
@@ -122,6 +114,11 @@ class Questions(BaseTable):
     def view_answered(self):
         cursor = db.select(self.table_name, criteria={'answered': 1})
         self.print_title_bar('Answered Questions')
+        self.print_records(cursor)
+
+    def view_all_questions(self):
+        cursor = db.select(self.table_name)
+        self.print_title_bar(f'View All {self.table_name}')
         self.print_records(cursor)
 
     def add_question(self):

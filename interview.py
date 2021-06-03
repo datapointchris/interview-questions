@@ -68,7 +68,7 @@ class Menu:
                             questions.get_random_question,
                             {'answered': 0}),
                 '3': Option('View Answered Questions', 'questions', questions.view_answered, None),
-                'A': Option('View All Questions', 'questions', questions.view_all, None),
+                'A': Option('View All Questions', 'questions', questions.view_all_questions, None),
                 'B': Option('View a Question by ID', 'questions', questions.view_by_id, None),
                 'C': Option('Add a question', 'questions', questions.add_question, None),
                 'D': Option('Edit a question',
