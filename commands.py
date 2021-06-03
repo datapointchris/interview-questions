@@ -21,21 +21,15 @@ class BaseTable():
         bottom_border = '⎽' * len(title)
         print('\n'.join([top_border, title, bottom_border, '']))
 
-    def print_records(self, cursor):
-        columns = [tuple[0] for tuple in cursor.description]
-        records = cursor.fetchall()
-        if records:
-            for i, record in enumerate(records):
-                for column, record_item in zip(columns, record):
-                    answered_column = f'{"Y" if record_item == 1 else "N" if record_item == 0 else record_item}'
-                    print(f'{column.upper()}:  {answered_column if column == "answered" else record_item}')
-                print()
-        else:
-            print('No matching records found.')
-            print()
-        print('-' * 80)
-        print()
-
+    def view_by_id(self, id=None, skip_title=None):
+        if id is None:
+            id = input('Select ID: ')
+        cursor = db.select(self.table_name, criteria={'id': id})
+        if skip_title is None:
+            self.print_title_bar('View by ID')
+        self.print_records(cursor)
+    
+    
     def validate_input(self, input_message, option_map):
         """option_map should be a dictionary of mappings"""
         choice = input(f'{input_message} ').upper()
@@ -93,15 +87,20 @@ class Questions(BaseTable):
             'answered': 'integer'
         })
 
-    def get_random_question(self, data=None):
-        if data:
-            cursor = db.select_random(self.table_name, data)
-            name = 'Random Unanswered Question'
-        else:
-            cursor = db.select_random(self.table_name)
-            name = 'Random Question'
+    def get_random_question(self):
+        name = 'Random Question'
+        cursor = db.select_random(self.table_name)
+        record = cursor.fetchone()
         self.print_title_bar(name)
-        self.print_records(cursor)
+        self.question_printer(record)
+
+    def get_random_unanswered_question(self):
+        name = 'Random Unanswered Question'
+        cursor = db.select_random(self.table_name, criteria={'answered': 0})
+
+        self.print_title_bar(name)
+        self.print_questions(cursor)
+
 
     def view_answered(self):
         cursor = db.select(self.table_name, criteria={'answered': 1})
@@ -110,8 +109,8 @@ class Questions(BaseTable):
 
     def view_all_questions(self):
         cursor = db.select(self.table_name)
-        self.print_title_bar(f'View All {self.table_name}')
-        self.print_records(cursor)
+        self.print_title_bar(f'View all questions')
+        self.print_questions(cursor)
 
     def view_question_by_id(self, id=None, skip_title=None):
         if id is None:
@@ -139,6 +138,23 @@ class Questions(BaseTable):
         update_data = {'id': id, 'question': edited_question, 'answered': answered}
         db.update(self.table_name, {'id': id}, update_data)
 
+    def question_printer(self, record):
+        question_id, question, answered = record
+        print(f'ID: {question_id}')
+        print(f'Question: {question}')
+        print(f'Answered: {"Y" if answered == 1 else "N" if answered == 0 else answered}')
+        print()
+
+    def print_many_records(self, cursor, print_function):
+        records = cursor.fetchall()
+        if records:
+            for record in records:
+                print_function(record)                
+        else:
+            print('No matching records found.')
+            print()
+        print('-' * 80)
+        print()
 
 class Answers(BaseTable):
 
@@ -164,7 +180,7 @@ class Answers(BaseTable):
             print_question = data.get('func')
             print_question(id=record[1], skip_title=True)
             print()
-            self.(id=id, skip_title=True)
+            self.view_by_id(id=id, skip_title=True)
             print()
         else:
             print('No matching records found.')
@@ -192,7 +208,7 @@ class Answers(BaseTable):
         print_question = data.get('func')
         print_question(id=record[1], skip_title=True)
         print()
-        self.(id=id, skip_title=True)
+        self.view_by_id(id=id, skip_title=True)
         print()
         edited_answer = input('Enter the new answer: ')
 
@@ -224,7 +240,7 @@ class Notes(BaseTable):
             print_question = data.get('func')
             print_question(id=record[1], skip_title=True)
             print()
-            self.(id=id, skip_title=True)
+            self.view_by_id(id=id, skip_title=True)
             print()
         else:
             print('No matching records found.')
@@ -252,7 +268,7 @@ class Notes(BaseTable):
         print_question = data.get('func')
         print_question(id=record[1], skip_title=True)
         print()
-        self.(id=id, skip_title=True)
+        self.view_by_id(id=id, skip_title=True)
         print()
         edited_note = input('Enter the new note: ')
 
@@ -284,7 +300,7 @@ class Tips(BaseTable):
             print_question = data.get('func')
             print_question(id=record[1], skip_title=True)
             print()
-            self.(id=id, skip_title=True)
+            self.view_by_id(id=id, skip_title=True)
             print()
         else:
             print('No matching records found.')
@@ -312,7 +328,7 @@ class Tips(BaseTable):
         print_question = data.get('func')
         print_question(id=record[1], skip_title=True)
         print()
-        self.(id=id, skip_title=True)
+        self.view_by_id(id=id, skip_title=True)
         print()
         edited_tip = input('Enter the new tip: ')
 
