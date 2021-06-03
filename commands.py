@@ -165,7 +165,7 @@ class Questions(BaseTable):
             f'Question is answered? (Currently: {"Y" if record[2] == 1 else "N"}), Y/N?', {'Y': 1, 'N': 0})
         update_data = {'id': id, 'question': edited_question, 'answered': answered}
         db.update(self.table_name, {'id': id}, update_data)
-        return_message = ''
+        return_message = '~~ Successfully edited question ~~'
         return_data = None
         return (return_message, return_data)
 
