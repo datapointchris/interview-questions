@@ -78,54 +78,58 @@ class Questions(BaseTable):
             'answered': 'integer'
         })
 
-    def get_random_question(self):
+    def get_random_question(self, data):
         name = 'Random Question'
         cursor = db.select_random(self.table_name)
         record = cursor.fetchone()
         question_id = record[0]
         printer.print_title_bar(name)
-        self.question_printer(record)
+        printer.question_printer(record)
         return_message = ''
         return_data = question_id
         return (return_message, return_data)
 
-    def get_random_unanswered_question(self):
+    def get_random_unanswered_question(self, data):
         name = 'Random Unanswered Question'
         cursor = db.select_random(self.table_name, criteria={'answered': 0})
         record = cursor.fetchone()
         question_id = record[0]
         printer.print_title_bar(name)
-        self.question_printer(record)
+        printer.question_printer(record)
         return_message = ''
         return_data = question_id
         return (return_message, return_data)
 
-    def view_answered(self):
+    def view_answered(self, data):
         cursor = db.select(self.table_name, criteria={'answered': 1})
         printer.print_title_bar('Answered Questions')
-        self.print_many_records(cursor, print_function=self.question_printer)
+        self.print_many_records(cursor, print_function=printer.question_printer)
         return_message = ''
         return_data = None
         return (return_message, return_data)
 
-    def view_all_questions(self):
+    def view_all_questions(self, data):
         cursor = db.select(self.table_name)
         printer.print_title_bar('View all questions')
-        self.print_many_records(cursor, print_function=self.question_printer)
+        printer.print_many_records(cursor, print_function=printer.question_printer)
         return_message = ''
         return_data = None
         return (return_message, return_data)
 
-    def view_question_by_id(self, id=None, skip_title=None):
-        if id is None:
-            id = input('Select ID: ')
-        cursor = db.select(self.table_name, criteria={'id': id})
-        record = cursor.fetchone()
-        if skip_title is None:
+    def view_question_by_id(self, data):
+        id = input('ID to View: ')
+        question_record = db.select(table_name=self.table_name,
+                                    criteria={'id': id}).fetchone()
+        if question_record:
             printer.print_title_bar('View by ID')
-        self.question_printer(record)
+            printer.question_printer(record=question_record)
+        else:
+            print('No matching records found.')
+            print()
+        print('-' * 80)
+        print()
         return_message = ''
-        return_data = id
+        return_data = {'question_id': id}
         return (return_message, return_data)
 
     def add_question(self):
@@ -145,13 +149,13 @@ class Questions(BaseTable):
         return_data = None
         return (return_message, return_data)
 
-    def edit_question(self):
-        id = input('ID to Edit: ')
+    def edit_question(self, data):
+        if data:
+            question_id = data.get('question_id')
+        if question_id is None:
+            question_id = input('Enter question ID: ')
         record = db.select(self.table_name, criteria={'id': id}).fetchone()
-        print()
-        print(f'ID: {record[0]}')
-        print(f'Question: {record[1]}')
-        print()
+        printer.question_printer(record)
         edited_question = input('Enter the edited question: ')
         answered = self.validate_input(
             f'Question is answered? (Currently: {"Y" if record[2] == 1 else "N"}), Y/N?', {'Y': 1, 'N': 0})
@@ -178,15 +182,12 @@ class Answers(BaseTable):
     def view_answer_by_id(self, data):
         id = input('ID to View: ')
         answer_record = db.select(self.table_name, criteria={'id': id}).fetchone()
-        printer.print_title_bar('View by ID')
-        print()
         if answer_record:
             answer_id, question_id, answer = answer_record
             question_record = db.select(table_name='questions',
                                         criteria={'id': question_id}).fetchone()
-          
+            printer.print_title_bar('View by ID')
             print('Question for Reference:')
-            print()
             printer.question_printer(record=question_record)
             print()
             printer.answer_printer(record=answer_record)
@@ -201,8 +202,7 @@ class Answers(BaseTable):
         question_id = data.get('question_id')
         if question_id is None:
             question_id = input('Enter question ID: ')
-        print_function = data.get('print_function')
-        print_function(id=question_id, skip_title=True)
+
         print()
         new_answer = input('Enter new answer: ')
         table_data = {'question_id': question_id, 'answer': new_answer}
@@ -210,19 +210,25 @@ class Answers(BaseTable):
 
     def edit_answer(self, data):
         id = input('ID to Edit: ')
-        record = db.select(self.table_name, criteria={'id': id}).fetchone()
+        answer_record = db.select(self.table_name, criteria={'id': id}).fetchone()
+        if answer_record:
+            answer_id, question_id, answer = answer_record
+            question_record = db.select(table_name='questions',
+                                        criteria={'id': question_id}).fetchone()
+            printer.print_title_bar('View by ID')
+            print('Question for Reference:')
+            printer.question_printer(record=question_record)
+            print()
+            printer.answer_printer(record=answer_record)
+            print()
+            edited_answer = input('Enter the new answer: ')
+            update_data = {'id': answer_id, 'question_id': question_id, 'answer': edited_answer}
+            db.update(self.table_name, {'id': id}, update_data)
+        else:
+            print('No matching records found.')
+            print()
+        print('-' * 80)
         print()
-        print('Question for Reference:')
-        print()
-        print_question = data.get('func')
-        print_question(id=record[1], skip_title=True)
-        print()
-        self.view_by_id(id=id, skip_title=True)
-        print()
-        edited_answer = input('Enter the new answer: ')
-
-        update_data = {'id': id, 'question_id': record[1], 'answer': edited_answer}
-        db.update(self.table_name, {'id': id}, update_data)
 
 
 class Notes(BaseTable):
