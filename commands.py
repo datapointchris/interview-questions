@@ -161,24 +161,7 @@ class Questions(BaseTable):
         return_data = None
         return (return_message, return_data)
 
-    def question_printer(self, record):
-        question_id, question, answered = record
-        print(f'ID: {question_id}')
-        print(f'Question: {question}')
-        print(f'Answered: {"Y" if answered == 1 else "N" if answered == 0 else answered}')
-        print()
-
-    def print_many_records(self, cursor, print_function):
-        records = cursor.fetchall()
-        if records:
-            for record in records:
-                print_function(record)
-        else:
-            print('No matching records found.')
-            print()
-        print('-' * 80)
-        print()
-
+   
 
 class Answers(BaseTable):
 

@@ -15,3 +15,43 @@ class Printer:
         top_border = '⎺' * len(title)
         bottom_border = '⎽' * len(title)
         print('\n'.join([top_border, title, bottom_border, '']))
+
+    def print_many_records(self, cursor, print_function):
+        records = cursor.fetchall()
+        if records:
+            for record in records:
+                print_function(record)
+        else:
+            print('No matching records found.')
+            print()
+        print('-' * 80)
+        print()
+
+    def question_printer(self, record):
+        question_id, question, answered = record
+        print(f'ID: {question_id}')
+        print(f'Question: {question}')
+        print(f'Answered: {"Y" if answered == 1 else "N" if answered == 0 else answered}')
+        print()
+
+    def answer_printer(self, record):
+        id, question_id, answer = record
+        print(f'ID: {id}')
+        print(f'Question ID: {question_id}')
+        print(f'Answer: {answer}')
+        print()
+
+    def note_printer(self, record):
+        id, question_id, note = record
+        print(f'ID: {id}')
+        print(f'Question ID: {question_id}')
+        print(f'Note: {note}')
+        print()
+
+    def tip_printer(self, record):
+        id, question_id, tip = record
+        print(f'ID: {id}')
+        print(f'Question ID: {question_id}')
+        print(f'Tip: {tip}')
+        print()
+
