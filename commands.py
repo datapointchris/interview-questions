@@ -1,8 +1,10 @@
 from database import DatabaseManager
+from printer import Printer
 from datetime import datetime
 import sys
 
 db = DatabaseManager('interview.db')
+printer = Printer()
 
 
 class BaseTable():
@@ -11,15 +13,13 @@ class BaseTable():
     def __init__(self, defaults):
         self.defaults = defaults
 
-    
-
     def view_by_id(self, id=None, skip_title=None):
         if id is None:
             id = input('Select ID: ')
         cursor = db.select(self.table_name, criteria={'id': id})
         if skip_title is None:
-            self.print_title_bar('View by ID')
-        self.print_records(cursor)
+            printer.print_title_bar('View by ID')
+        printer.print_many_records(cursor)
 
     def validate_input(self, input_message, option_map):
         """option_map should be a dictionary of mappings"""
@@ -83,7 +83,7 @@ class Questions(BaseTable):
         cursor = db.select_random(self.table_name)
         record = cursor.fetchone()
         question_id = record[0]
-        self.print_title_bar(name)
+        printer.print_title_bar(name)
         self.question_printer(record)
         return_message = ''
         return_data = question_id
@@ -94,7 +94,7 @@ class Questions(BaseTable):
         cursor = db.select_random(self.table_name, criteria={'answered': 0})
         record = cursor.fetchone()
         question_id = record[0]
-        self.print_title_bar(name)
+        printer.print_title_bar(name)
         self.question_printer(record)
         return_message = ''
         return_data = question_id
@@ -102,7 +102,7 @@ class Questions(BaseTable):
 
     def view_answered(self):
         cursor = db.select(self.table_name, criteria={'answered': 1})
-        self.print_title_bar('Answered Questions')
+        printer.print_title_bar('Answered Questions')
         self.print_many_records(cursor, print_function=self.question_printer)
         return_message = ''
         return_data = None
@@ -110,7 +110,7 @@ class Questions(BaseTable):
 
     def view_all_questions(self):
         cursor = db.select(self.table_name)
-        self.print_title_bar('View all questions')
+        printer.print_title_bar('View all questions')
         self.print_many_records(cursor, print_function=self.question_printer)
         return_message = ''
         return_data = None
@@ -122,7 +122,7 @@ class Questions(BaseTable):
         cursor = db.select(self.table_name, criteria={'id': id})
         record = cursor.fetchone()
         if skip_title is None:
-            self.print_title_bar('View by ID')
+            printer.print_title_bar('View by ID')
         self.question_printer(record)
         return_message = ''
         return_data = id
@@ -161,7 +161,6 @@ class Questions(BaseTable):
         return_data = None
         return (return_message, return_data)
 
-   
 
 class Answers(BaseTable):
 
@@ -178,16 +177,19 @@ class Answers(BaseTable):
 
     def view_answer_by_id(self, data):
         id = input('ID to View: ')
-        record = db.select(self.table_name, criteria={'id': id}).fetchone()
-        self.print_title_bar('View by ID')
-        if record:
-            print()
+        answer_record = db.select(self.table_name, criteria={'id': id}).fetchone()
+        printer.print_title_bar('View by ID')
+        print()
+        if answer_record:
+            answer_id, question_id, answer = answer_record
+            question_record = db.select(table_name='questions',
+                                        criteria={'id': question_id}).fetchone()
+          
             print('Question for Reference:')
             print()
-            print_question = data.get('func')
-            print_question(id=record[1], skip_title=True)
+            printer.question_printer(record=question_record)
             print()
-            self.view_by_id(id=id, skip_title=True)
+            printer.answer_printer(record=answer_record)
             print()
         else:
             print('No matching records found.')
@@ -239,7 +241,7 @@ class Notes(BaseTable):
     def view_note_by_id(self, data):
         id = input('ID to View: ')
         record = db.select(self.table_name, criteria={'id': id}).fetchone()
-        self.print_title_bar('View by ID')
+        printer.print_title_bar('View by ID')
         if record:
             print()
             print('Question for Reference:')
@@ -299,7 +301,7 @@ class Tips(BaseTable):
     def view_tip_by_id(self, data):
         id = input('ID to View: ')
         record = db.select(self.table_name, criteria={'id': id}).fetchone()
-        self.print_title_bar('View by ID')
+        printer.print_title_bar('View by ID')
         if record:
             print()
             print('Question for Reference:')
