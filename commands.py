@@ -11,15 +11,7 @@ class BaseTable():
     def __init__(self, defaults):
         self.defaults = defaults
 
-    def print_title_bar(self, name):
-        max_width = 80
-        space = max_width - len(name) - 10
-        left_pad = ('⎼' * (space // 2)) + (' ' * 5)
-        right_pad = (' ' * 5) + ('⎼' * (space // 2))
-        title = f'{left_pad}{name.upper()}{right_pad}'
-        top_border = '⎺' * len(title)
-        bottom_border = '⎽' * len(title)
-        print('\n'.join([top_border, title, bottom_border, '']))
+    
 
     def view_by_id(self, id=None, skip_title=None):
         if id is None:
@@ -118,8 +110,8 @@ class Questions(BaseTable):
 
     def view_all_questions(self):
         cursor = db.select(self.table_name)
-        self.print_title_bar(f'View all questions')
-        self.print_questions(cursor)
+        self.print_title_bar('View all questions')
+        self.print_many_records(cursor, print_function=self.question_printer)
         return_message = ''
         return_data = None
         return (return_message, return_data)
@@ -148,7 +140,7 @@ class Questions(BaseTable):
             f'~~ Successfully Added Question ~~\n'
             f'ID: {question_id}\n'
             f'Question: {question}\n'
-            f'Answered: {"Y" if answered == 1 else "N" if answered == 0 else answered}'
+            f'Answered: {"Y" if answered == 1 else "N" if answered == 0 else answered}\n'
         )
         return_data = None
         return (return_message, return_data)
@@ -224,8 +216,8 @@ class Answers(BaseTable):
         question_id = data.get('question_id')
         if question_id is None:
             question_id = input('Enter question ID: ')
-        print_question = data.get('func')
-        print_question(id=question_id, skip_title=True)
+        print_function = data.get('print_function')
+        print_function(id=question_id, skip_title=True)
         print()
         new_answer = input('Enter new answer: ')
         table_data = {'question_id': question_id, 'answer': new_answer}
