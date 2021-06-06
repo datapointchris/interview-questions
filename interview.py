@@ -32,14 +32,13 @@ def get_user_input(label, required=True):
 
 
 class Option:
-    def __init__(self, name, menu, command, data):
+    def __init__(self, name, menu, command):
         self.name = name
         self.menu = menu
         self.command = command
-        self.data = data
 
-    def execute(self):
-        if self.data:
+    def execute(self, return_data):
+        if return_data:
             return self.command(self.data)
         return self.command()
 
@@ -51,68 +50,46 @@ class Menu:
             'main': {
 
                 # (name, menu, command, data)
-                '1': Option('Get a Random Question', 'questions', questions.get_random_question, None),
-                '2': Option('Get a Random Unanswered Question',
-                            'questions',
-                            questions.get_random_question,
-                            {'answered': 0}),
-                '3': Option('Questions Menu', 'questions', clear_screen, None),
-                '4': Option('Answers Menu', 'answers', clear_screen, None),
-                '5': Option('Notes Menu', 'notes', clear_screen, None),
-                '6': Option('Tips Menu', 'tips', clear_screen, None),
-                'R': Option('Reset Program to Defaults', 'main', reset_program, None),
-                'Q': Option('Quit Program', 'main', sys.exit, None)
+                '1': Option('Get a Random Question', 'questions', questions.get_random_question),
+                '2': Option('Get a Random Unanswered Question', 'questions', questions.get_random_question),
+                '3': Option('Questions Menu', 'questions', clear_screen),
+                '4': Option('Answers Menu', 'answers', clear_screen),
+                '5': Option('Notes Menu', 'notes', clear_screen),
+                '6': Option('Tips Menu', 'tips', clear_screen),
+                'R': Option('Reset Program to Defaults', 'main', reset_program),
+                'Q': Option('Quit Program', 'main', sys.exit)
             },
             'questions': {
-                '1': Option('Get a Random Question',
-                            'questions',
-                            questions.get_random_question, None),
-                '2': Option('Get a Random Unanswered Question',
-                            'questions',
-                            questions.get_random_unanswered_question, None),
-                '3': Option('View Answered Questions', 'questions', questions.view_answered, None),
-                'A': Option('View All Questions', 'questions', questions.view_all_questions, None),
-                'B': Option('View a Question by ID', 'questions', questions.view_question_by_id, None),
-                'C': Option('Add a question', 'questions', questions.add_question, None),
-                'D': Option('Edit a question',
-                            'questions',
-                            questions.edit_question,
-                            None),
-                'E': Option('Delete a question', 'questions', questions.delete, None),
-                'F': Option('Delete All questions', 'questions', questions.delete_all, None),
-                'G': Option('Reset questions to Default', 'questions', questions.reset_to_default, None),
-                'M': Option('Return to Main Menu', 'main', clear_screen, None),
-                'Q': Option('Quit Program', 'main', sys.exit, None)
+                '1': Option('Get a Random Question', 'questions', questions.get_random_question),
+                '2': Option('Get a Random Unanswered Question', 'questions', questions.get_random_unanswered_question),
+                '3': Option('View Answered Questions', 'questions', questions.view_answered),
+                'A': Option('View All Questions', 'questions', questions.view_all_questions),
+                'B': Option('View a Question by ID', 'questions', questions.view_question_by_id),
+                'C': Option('Add a question', 'questions', questions.add_question),
+                'D': Option('Edit a question', 'questions', questions.edit_question),
+                'E': Option('Delete a question', 'questions', questions.delete),
+                'F': Option('Delete All questions', 'questions', questions.delete_all),
+                'G': Option('Reset questions to Default', 'questions', questions.reset_to_default),
+                'M': Option('Return to Main Menu', 'main', clear_screen),
+                'Q': Option('Quit Program', 'main', sys.exit)
             },
             'single_question': {
-                '1': Option('Answer this question', 'questions', answers.add_answer, None),
-                '2': Option('Get a Random Unanswered Question',
-                            'questions',
-                            questions.get_random_question,
-                            {'answered': 0}),
-                '3': Option('View Answered Questions', 'questions', questions.view_answered, None),
-                'A': Option('View All Questions', 'questions', questions.view_all_questions, None),
-                'B': Option('View a Question by ID', 'questions', questions.view_question_by_id, None),
-                'C': Option('Add a question', 'questions', questions.add_question, None),
-                'D': Option('Edit a question',
-                            'questions',
-                            questions.edit_question,
-                            None),
-                'E': Option('Delete a question', 'questions', questions.delete, None),
-                'F': Option('Delete All questions', 'questions', questions.delete_all, None),
-                'G': Option('Reset questions to Default', 'questions', questions.reset_to_default, None),
-                'M': Option('Return to Main Menu', 'main', clear_screen, None),
-                'Q': Option('Quit Program', 'main', sys.exit, None)
+                '1': Option('Answer this question', 'questions', answers.add_answer),
+                '2': Option('Get a Random Unanswered Question', 'questions', questions.get_random_unanswered_question),
+                '3': Option('View Answered Questions', 'questions', questions.view_answered),
+                'A': Option('View All Questions', 'questions', questions.view_all_questions),
+                'B': Option('View a Question by ID', 'questions', questions.view_question_by_id),
+                'C': Option('Add a question', 'questions', questions.add_question),
+                'D': Option('Edit a question', 'questions', questions.edit_question),
+                'E': Option('Delete a question', 'questions', questions.delete),
+                'F': Option('Delete All questions', 'questions', questions.delete_all),
+                'G': Option('Reset questions to Default', 'questions', questions.reset_to_default),
+                'M': Option('Return to Main Menu', 'main', clear_screen),
+                'Q': Option('Quit Program', 'main', sys.exit)
             },
             'answers': {
-                'B': Option('View an answer by ID',
-                            'answers',
-                            answers.view_answer_by_id,
-                            {'func': questions.view_question_by_id}),
-                'C': Option('Add an answer',
-                            'answers',
-                            answers.add_answer,
-                            {'func': questions.view_question_by_id}),
+                'B': Option('View an answer by ID', 'answers', answers.view_answer_by_id),
+                'C': Option('Add an answer', 'answers', answers.add_answer),
                 'D': Option('Edit an answer', 'answers', answers.edit_answer, {'func': questions.view_question_by_id}),
                 'E': Option('Delete an answer', 'answers', answers.delete, None),
                 'F': Option('Delete All answers', 'answers', answers.delete_all, None),
@@ -145,7 +122,7 @@ class Menu:
     def _option_choice_is_valid(self, choice, options):
         return choice in options
 
-    def get_command(self):
+    def get_command(self, return_data):
         submenu = self._menus.get(self.current_menu)
         choice = input('Choose option: ').upper()
         while not self._option_choice_is_valid(choice, options=submenu):
@@ -194,13 +171,13 @@ clear_screen()
 menu = Menu()
 
 menu.print_menu()
-
+return_data = None
 
 while True:
 
     command = menu.get_command()
     clear_screen()
-    return_message, return_data = command.execute()
+    return_message, return_data = command.execute(return_data=return_data)
     clear_screen()
     print(return_message)
     menu.print_menu()
