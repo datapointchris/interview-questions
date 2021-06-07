@@ -6,12 +6,24 @@ import sys
 db = DatabaseManager('interview.db')
 printer = Printer()
 
-def validate_input(self, input_message, option_map):
+
+def get_valid_id(prompt, table_name):
+    id = input(f'{prompt}')
+    answer = db.id_exists(id, table_name).fetchone()[0]
+    while answer < 1:
+        print(f'Invalid ID: {id}')
+        id = input(f'{prompt}')
+        answer = db.id_exists(id, table_name).fetchone()[0]
+    return id
+
+
+def validate_input(input_message, option_map):
     """option_map should be a dictionary of mappings"""
     choice = input(f'{input_message} ').upper()
     while choice not in option_map.keys():
         choice = input(f'{input_message} ').upper()
     return option_map.get(choice)
+
 
 class BaseTable():
     '''Base class for handling all common table functions'''
@@ -19,26 +31,41 @@ class BaseTable():
     def __init__(self, defaults):
         self.defaults = defaults
 
-
     def populate_defaults(self):
         for record in self.defaults:
             db.add(self.table_name, record)
 
-    def delete(self):
-        delete_id = input('ID to delete: ')
+    def delete(self, return_data=None):
+        # delete_id = input('ID to delete: ')
+        # TODO: validate_input(delete_id)
+        delete_id = get_valid_id('Give a valid id: ', self.table_name)
+        cursor = db.select(table_name=self.table_name, criteria={'id': delete_id})
+        record = cursor.fetchone()
         db.delete(self.table_name, {'id': delete_id})
+        print()
+        print('~~ Successfully Deleted Question ~~')
+        printer.print_records(record, self.print_function)
+        return_message = ''
+        return_data = None
+        return (return_message, return_data)
 
-    def delete_all(self):
+    def delete_all(self, return_data=None):
         self.drop_table()
         self.create_table()
+        return_message = ''
+        return_data = None
+        return (return_message, return_data)
 
-    def reset_to_default(self):
+    def reset_to_default(self, return_data=None):
         self.delete_all()
         if self.defaults:
             self.populate_defaults()
 
-    def drop_table(self):
+    def drop_table(self, return_data=None):
         db.drop_table(self.table_name)
+        return_message = ''
+        return_data = None
+        return (return_message, return_data)
 
 
 class Jobs(BaseTable):  # this class and table isn't going to be used in v1.0
@@ -59,9 +86,10 @@ class Jobs(BaseTable):  # this class and table isn't going to be used in v1.0
 
 class Questions(BaseTable):
 
-    def __init__(self, defaults=None):
+    def __init__(self, defaults=None, print_fuction=printer.question_printer):
         super().__init__(defaults)
         self.table_name = 'questions'
+        self.print_function = print_fuction
 
     def create_table(self):
         db.create_table(self.table_name, {
@@ -75,7 +103,7 @@ class Questions(BaseTable):
         record = cursor.fetchone()
         question_id = record[0]
         printer.print_title_bar('Random Question')
-        printer.print_records(record, print_function=printer.question_printer)
+        printer.print_records(record, self.print_function)
         return_message = ''
         return_data = {'question_id': question_id}
         return (return_message, return_data)
@@ -85,7 +113,7 @@ class Questions(BaseTable):
         record = cursor.fetchone()
         question_id = record[0]
         printer.print_title_bar('Random Unanswered Question')
-        printer.print_records(record, print_function=printer.question_printer)
+        printer.print_records(record, self.print_function)
         return_message = ''
         return_data = {'question_id': question_id}
         return (return_message, return_data)
@@ -94,7 +122,7 @@ class Questions(BaseTable):
         cursor = db.select(self.table_name, criteria={'answered': 1})
         records = cursor.fetchall()
         printer.print_title_bar('Answered Questions')
-        printer.print_records(records, print_function=printer.question_printer)
+        printer.print_records(records, self.print_function)
         return_message = ''
         return_data = None
         return (return_message, return_data)
@@ -103,7 +131,7 @@ class Questions(BaseTable):
         cursor = db.select(self.table_name)
         records = cursor.fetchall()
         printer.print_title_bar('View all questions')
-        printer.print_records(records, print_function=printer.question_printer)
+        printer.print_records(records, self.print_function)
         return_message = ''
         return_data = None
         return (return_message, return_data)
@@ -113,7 +141,7 @@ class Questions(BaseTable):
         cursor = db.select(table_name=self.table_name, criteria={'id': id})
         record = cursor.fetchone()
         printer.print_title_bar('View by ID')
-        printer.print_records(record, print_function=printer.question_printer)
+        printer.print_records(record, self.print_function)
         return_message = ''
         return_data = {'question_id': id}
         return (return_message, return_data)
@@ -127,7 +155,7 @@ class Questions(BaseTable):
         record = cursor.fetchone()
         print()
         print('~~ Successfully Added Question ~~')
-        printer.print_records(record, print_function=printer.question_printer)
+        printer.print_records(record, self.print_function)
         # question_id, question, answered = record
         # return_message = (
         #     f'~~ Successfully Added Question ~~\n'
@@ -146,7 +174,7 @@ class Questions(BaseTable):
             question_id = input('Enter question ID: ')
         cursor = db.select(self.table_name, criteria={'id': question_id})
         record = cursor.fetchone()
-        printer.print_records(record, print_function=printer.question_printer)
+        printer.print_records(record, self.print_function)
         edited_question = input('Enter the edited question: ')
         answered = validate_input(
             f'Question is answered? (Currently: {"Y" if record[2] == 1 else "N"}), Y/N?', {'Y': 1, 'N': 0})
@@ -156,7 +184,7 @@ class Questions(BaseTable):
         record = edited_cursor.fetchone()
         print()
         print('~~ Successfully Edited Question ~~')
-        printer.print_records(record, print_function=printer.question_printer)
+        printer.print_records(record, self.print_function)
         # return_message = '~~ Successfully edited question ~~'
         return_message = None
         return_data = None
@@ -165,9 +193,10 @@ class Questions(BaseTable):
 
 class Answers(BaseTable):
 
-    def __init__(self, defaults=None):
+    def __init__(self, defaults=None, print_fuction=printer.answer_printer):
         super().__init__(defaults)
         self.table_name = 'answers'
+        self.print_function = print_fuction
 
     def create_table(self):
         db.create_table(self.table_name, {
@@ -230,9 +259,10 @@ class Answers(BaseTable):
 
 class Notes(BaseTable):
 
-    def __init__(self, defaults=None):
+    def __init__(self, defaults=None, print_fuction=printer.note_printer):
         super().__init__(defaults)
         self.table_name = 'notes'
+        self.print_function = print_fuction
 
     def create_table(self):
         db.create_table(self.table_name, {
@@ -290,9 +320,10 @@ class Notes(BaseTable):
 
 class Tips(BaseTable):
 
-    def __init__(self, defaults=None):
+    def __init__(self, defaults=None, print_fuction=printer.tip_printer):
         super().__init__(defaults)
         self.table_name = 'tips'
+        self.print_function = print_fuction
 
     def create_table(self):
         db.create_table(self.table_name, {
