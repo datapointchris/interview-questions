@@ -19,7 +19,7 @@ class BaseTable():
         cursor = db.select(self.table_name, criteria={'id': id})
         if skip_title is None:
             printer.print_title_bar('View by ID')
-        printer.print_many_records(cursor)
+        printer.print_records(cursor)
 
     def validate_input(self, input_message, option_map):
         """option_map should be a dictionary of mappings"""
@@ -78,61 +78,55 @@ class Questions(BaseTable):
             'answered': 'integer'
         })
 
-    def get_random_question(self, data):
-        name = 'Random Question'
+    def get_random_question(self, return_data=None):
         cursor = db.select_random(self.table_name)
         record = cursor.fetchone()
         question_id = record[0]
-        printer.print_title_bar(name)
-        printer.question_printer(record)
+        printer.print_title_bar('Random Question')
+        printer.print_records(record, print_function=printer.question_printer)
         return_message = ''
-        return_data = question_id
+        return_data = {'question_id': question_id}
         return (return_message, return_data)
 
-    def get_random_unanswered_question(self, data):
-        name = 'Random Unanswered Question'
+    def get_random_unanswered_question(self, return_data=None):
         cursor = db.select_random(self.table_name, criteria={'answered': 0})
         record = cursor.fetchone()
         question_id = record[0]
-        printer.print_title_bar(name)
-        printer.question_printer(record)
+        printer.print_title_bar('Random Unanswered Question')
+        printer.print_records(record, print_function=printer.question_printer)
         return_message = ''
-        return_data = question_id
+        return_data = {'question_id': question_id}
         return (return_message, return_data)
 
-    def view_answered(self, data):
+    def view_answered(self, return_data=None):
         cursor = db.select(self.table_name, criteria={'answered': 1})
+        records = cursor.fetchall()
         printer.print_title_bar('Answered Questions')
-        self.print_many_records(cursor, print_function=printer.question_printer)
+        printer.print_records(records, print_function=printer.question_printer)
         return_message = ''
         return_data = None
         return (return_message, return_data)
 
-    def view_all_questions(self, data):
+    def view_all_questions(self, return_data=None):
         cursor = db.select(self.table_name)
+        records = cursor.fetchall()
         printer.print_title_bar('View all questions')
-        printer.print_many_records(cursor, print_function=printer.question_printer)
+        printer.print_records(records, print_function=printer.question_printer)
         return_message = ''
         return_data = None
         return (return_message, return_data)
 
-    def view_question_by_id(self, data):
+    def view_question_by_id(self, return_data=None):
         id = input('ID to View: ')
-        question_record = db.select(table_name=self.table_name,
-                                    criteria={'id': id}).fetchone()
-        if question_record:
-            printer.print_title_bar('View by ID')
-            printer.question_printer(record=question_record)
-        else:
-            print('No matching records found.')
-            print()
-        print('-' * 80)
-        print()
+        cursor = db.select(table_name=self.table_name, criteria={'id': id})
+        record = cursor.fetchone()
+        printer.print_title_bar('View by ID')
+        printer.print_records(record, print_function=printer.question_printer)
         return_message = ''
         return_data = {'question_id': id}
         return (return_message, return_data)
 
-    def add_question(self):
+    def add_question(self, return_data=None):
         input_data = input('Enter new question: ')
         table_data = {'question': input_data, 'answered': 0}
         return_cursor = db.add(self.table_name, table_data)

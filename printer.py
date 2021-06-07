@@ -3,7 +3,7 @@
 class Printer:
     '''Prints database records'''
 
-    def __init__():
+    def __init__(self):
         pass
 
     def print_title_bar(self, name):
@@ -16,11 +16,13 @@ class Printer:
         bottom_border = '⎽' * len(title)
         print('\n'.join([top_border, title, bottom_border, '']))
 
-    def print_many_records(self, cursor, print_function):
-        records = cursor.fetchall()
-        if records:
-            for record in records:
-                print_function(record)
+    def print_records(self, records, print_function):
+        if records is not None:
+            if isinstance(records, list):
+                for record in records:
+                    print_function(record)
+            else:
+                print_function(records)
         else:
             print('No matching records found.')
             print()

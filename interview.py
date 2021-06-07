@@ -39,7 +39,7 @@ class Option:
 
     def execute(self, return_data):
         if return_data:
-            return self.command(self.data)
+            return self.command(return_data)
         return self.command()
 
 
@@ -49,7 +49,7 @@ class Menu:
         self._menus = {
             'main': {
 
-                # (name, menu, command, data)
+                # (name, menu, command)
                 '1': Option('Get a Random Question', 'questions', questions.get_random_question),
                 '2': Option('Get a Random Unanswered Question', 'questions', questions.get_random_question),
                 '3': Option('Questions Menu', 'questions', clear_screen),
@@ -90,39 +90,39 @@ class Menu:
             'answers': {
                 'B': Option('View an answer by ID', 'answers', answers.view_answer_by_id),
                 'C': Option('Add an answer', 'answers', answers.add_answer),
-                'D': Option('Edit an answer', 'answers', answers.edit_answer, {'func': questions.view_question_by_id}),
-                'E': Option('Delete an answer', 'answers', answers.delete, None),
-                'F': Option('Delete All answers', 'answers', answers.delete_all, None),
-                'G': Option('Reset answers to Default', 'answers', answers.reset_to_default, None),
-                'M': Option('Return to Main Menu', 'main', clear_screen, None),
-                'Q': Option('Quit Program', 'main', sys.exit, None)
+                'D': Option('Edit an answer', 'answers', answers.edit_answer),
+                'E': Option('Delete an answer', 'answers', answers.delete),
+                'F': Option('Delete All answers', 'answers', answers.delete_all),
+                'G': Option('Reset answers to Default', 'answers', answers.reset_to_default),
+                'M': Option('Return to Main Menu', 'main', clear_screen),
+                'Q': Option('Quit Program', 'main', sys.exit)
             },
             'notes': {
-                'B': Option('View a note by ID', 'notes', notes.view_note_by_id, {'func': questions.view_question_by_id}),
-                'C': Option('Add a note', 'notes', notes.add_note, {'func': questions.view_question_by_id}),
-                'D': Option('Edit a note', 'notes', notes.edit_note, {'func': questions.view_question_by_id}),
-                'E': Option('Delete a note', 'notes', notes.delete, None),
-                'F': Option('Delete All notes', 'notes', notes.delete_all, None),
-                'G': Option('Reset notes to Default', 'notes', notes.reset_to_default, None),
-                'M': Option('Return to Main Menu', 'main', clear_screen, None),
-                'Q': Option('Quit Program', 'main', sys.exit, None)
+                'B': Option('View a note by ID', 'notes', notes.view_note_by_id),
+                'C': Option('Add a note', 'notes', notes.add_note),
+                'D': Option('Edit a note', 'notes', notes.edit_note),
+                'E': Option('Delete a note', 'notes', notes.delete),
+                'F': Option('Delete All notes', 'notes', notes.delete_all),
+                'G': Option('Reset notes to Default', 'notes', notes.reset_to_default),
+                'M': Option('Return to Main Menu', 'main', clear_screen),
+                'Q': Option('Quit Program', 'main', sys.exit)
             },
             'tips': {
-                'B': Option('View a tip by ID', 'tips', tips.view_tip_by_id, {'func': questions.view_question_by_id}),
-                'C': Option('Add a tip', 'tips', tips.add_tip, {'func': questions.view_question_by_id}),
-                'D': Option('Edit a tip', 'tips', tips.edit_tip, {'func': questions.view_question_by_id}),
-                'E': Option('Delete a tip', 'tips', tips.delete, None),
-                'F': Option('Delete All tips', 'tips', tips.delete_all, None),
-                'G': Option('Reset tips to Default', 'tips', tips.reset_to_default, None),
-                'M': Option('Return to Main Menu', 'main', clear_screen, None),
-                'Q': Option('Quit Program', 'main', sys.exit, None)
+                'B': Option('View a tip by ID', 'tips', tips.view_tip_by_id),
+                'C': Option('Add a tip', 'tips', tips.add_tip),
+                'D': Option('Edit a tip', 'tips', tips.edit_tip),
+                'E': Option('Delete a tip', 'tips', tips.delete),
+                'F': Option('Delete All tips', 'tips', tips.delete_all),
+                'G': Option('Reset tips to Default', 'tips', tips.reset_to_default),
+                'M': Option('Return to Main Menu', 'main', clear_screen),
+                'Q': Option('Quit Program', 'main', sys.exit)
             },
         }
 
     def _option_choice_is_valid(self, choice, options):
         return choice in options
 
-    def get_command(self, return_data):
+    def get_command(self):
         submenu = self._menus.get(self.current_menu)
         choice = input('Choose option: ').upper()
         while not self._option_choice_is_valid(choice, options=submenu):
@@ -178,6 +178,5 @@ while True:
     command = menu.get_command()
     clear_screen()
     return_message, return_data = command.execute(return_data=return_data)
-    clear_screen()
     print(return_message)
     menu.print_menu()
