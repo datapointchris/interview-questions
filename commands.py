@@ -13,14 +13,6 @@ class BaseTable():
     def __init__(self, defaults):
         self.defaults = defaults
 
-    def view_by_id(self, id=None, skip_title=None):
-        if id is None:
-            id = input('Select ID: ')
-        cursor = db.select(self.table_name, criteria={'id': id})
-        if skip_title is None:
-            printer.print_title_bar('View by ID')
-        printer.print_records(cursor)
-
     def validate_input(self, input_message, option_map):
         """option_map should be a dictionary of mappings"""
         choice = input(f'{input_message} ').upper()
