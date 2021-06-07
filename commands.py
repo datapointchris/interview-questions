@@ -134,7 +134,7 @@ class Questions(BaseTable):
         cursor = db.select(self.table_name, criteria={'id': inserted_id})
         record = cursor.fetchone()
         print()
-        print(f'~~ Successfully Added Question ~~')
+        print('~~ Successfully Added Question ~~')
         printer.print_records(record, print_function=printer.question_printer)
         # question_id, question, answered = record
         # return_message = (
@@ -147,19 +147,26 @@ class Questions(BaseTable):
         return_data = None
         return (return_message, return_data)
 
-    def edit_question(self, data):
-        if data:
-            question_id = data.get('question_id')
-        if question_id is None:
+    def edit_question(self, return_data=None):
+        if return_data is not None:
+            question_id = return_data.get('question_id')
+        else:
             question_id = input('Enter question ID: ')
-        record = db.select(self.table_name, criteria={'id': id}).fetchone()
-        printer.question_printer(record)
+        cursor = db.select(self.table_name, criteria={'id': question_id})
+        record = cursor.fetchone()
+        printer.print_records(record, print_function=printer.question_printer)
         edited_question = input('Enter the edited question: ')
         answered = self.validate_input(
             f'Question is answered? (Currently: {"Y" if record[2] == 1 else "N"}), Y/N?', {'Y': 1, 'N': 0})
-        update_data = {'id': id, 'question': edited_question, 'answered': answered}
-        db.update(self.table_name, {'id': id}, update_data)
-        return_message = '~~ Successfully edited question ~~'
+        update_data = {'id': question_id, 'question': edited_question, 'answered': answered}
+        db.update(self.table_name, {'id': question_id}, update_data)
+        edited_cursor = db.select(self.table_name, criteria={'id': question_id})
+        record = edited_cursor.fetchone()
+        print()
+        print('~~ Successfully Edited Question ~~')
+        printer.print_records(record, print_function=printer.question_printer)
+        # return_message = '~~ Successfully edited question ~~'
+        return_message = None
         return_data = None
         return (return_message, return_data)
 

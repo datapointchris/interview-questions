@@ -99,7 +99,7 @@ class DatabaseManager:
         update_criteria = ' AND '.join(update_placeholders)
         data_placeholders = ', '.join(f'{key} = ?' for key in data.keys())
         values = tuple(data.values()) + tuple(criteria.values())
-        self._execute(
+        cursor = self._execute(
             f'''
             UPDATE {table_name}
             SET {data_placeholders}
@@ -107,3 +107,4 @@ class DatabaseManager:
             ''',
             values,
         )
+        return cursor
