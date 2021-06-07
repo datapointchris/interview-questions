@@ -6,6 +6,12 @@ import sys
 db = DatabaseManager('interview.db')
 printer = Printer()
 
+def validate_input(self, input_message, option_map):
+    """option_map should be a dictionary of mappings"""
+    choice = input(f'{input_message} ').upper()
+    while choice not in option_map.keys():
+        choice = input(f'{input_message} ').upper()
+    return option_map.get(choice)
 
 class BaseTable():
     '''Base class for handling all common table functions'''
@@ -13,12 +19,6 @@ class BaseTable():
     def __init__(self, defaults):
         self.defaults = defaults
 
-    def validate_input(self, input_message, option_map):
-        """option_map should be a dictionary of mappings"""
-        choice = input(f'{input_message} ').upper()
-        while choice not in option_map.keys():
-            choice = input(f'{input_message} ').upper()
-        return option_map.get(choice)
 
     def populate_defaults(self):
         for record in self.defaults:
@@ -148,7 +148,7 @@ class Questions(BaseTable):
         record = cursor.fetchone()
         printer.print_records(record, print_function=printer.question_printer)
         edited_question = input('Enter the edited question: ')
-        answered = self.validate_input(
+        answered = validate_input(
             f'Question is answered? (Currently: {"Y" if record[2] == 1 else "N"}), Y/N?', {'Y': 1, 'N': 0})
         update_data = {'id': question_id, 'question': edited_question, 'answered': answered}
         db.update(self.table_name, {'id': question_id}, update_data)
