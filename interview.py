@@ -156,7 +156,8 @@ class Menu:
 
 questions = commands.Questions(defaults=defaults.default_questions)
 questions.create_table()
-questions.populate_defaults()
+# TODO: This shouldn't load defaults every time, only first time
+questions._populate_defaults()
 
 answers = commands.Answers()
 answers.create_table()

@@ -31,7 +31,7 @@ class BaseTable():
     def __init__(self, defaults):
         self.defaults = defaults
 
-    def populate_defaults(self):
+    def _populate_defaults(self):
         for record in self.defaults:
             db.add(self.table_name, record)
 
@@ -43,15 +43,16 @@ class BaseTable():
         record = cursor.fetchone()
         db.delete(self.table_name, {'id': delete_id})
         print()
-        print('~~ Successfully Deleted Question ~~')
+        print(f'~~ Successfully Deleted {self.table_name[:-1:].capitalize()} ~~')
         printer.print_records(record, self.print_function)
         return_message = ''
         return_data = None
         return (return_message, return_data)
 
     def delete_all(self, return_data=None):
-        self.drop_table()
+        self._drop_table()
         self.create_table()
+        print(f'~~ Successfully Deleted All {self.table_name.capitalize()} ~~')
         return_message = ''
         return_data = None
         return (return_message, return_data)
@@ -59,13 +60,14 @@ class BaseTable():
     def reset_to_default(self, return_data=None):
         self.delete_all()
         if self.defaults:
-            self.populate_defaults()
-
-    def drop_table(self, return_data=None):
-        db.drop_table(self.table_name)
+            self._populate_defaults()
+        print(f'~~ Successfully Set All {self.table_name.capitalize()} to Default ~~')
         return_message = ''
         return_data = None
         return (return_message, return_data)
+
+    def _drop_table(self, return_data=None):
+        db.drop_table(self.table_name)
 
 
 class Jobs(BaseTable):  # this class and table isn't going to be used in v1.0
@@ -101,6 +103,7 @@ class Questions(BaseTable):
     def get_random_question(self, return_data=None):
         cursor = db.select_random(self.table_name)
         record = cursor.fetchone()
+        # TODO: This fails if the table is empty
         question_id = record[0]
         printer.print_title_bar('Random Question')
         printer.print_records(record, self.print_function)
