@@ -7,6 +7,7 @@ from printer import Printer
 
 printer = Printer()
 
+
 def clear_screen(return_data=None):
     clear = 'cls' if os.name == 'nt' else 'clear'
     print("\n" * 150)
@@ -28,6 +29,10 @@ def reset_program(return_data=None):
         print('That was a close call!')
         print('\n\n')
     return None
+
+
+def exit_program(return_date=None):
+    sys.exit('👍 👍 👍 THANKS FOR PRACTICING 👍 👍 👍')
 
 
 def get_user_input(label, required=True):
@@ -63,7 +68,7 @@ class Menu:
                 '5': Option('Notes Menu', 'notes', clear_screen),
                 '6': Option('Tips Menu', 'tips', clear_screen),
                 'R': Option('Reset Program to Defaults', 'main', reset_program),
-                'Q': Option('Quit Program', 'main', sys.exit)
+                'Q': Option('Quit Program', 'main', exit_program)
             },
             'questions': {
                 '1': Option('Get a Random Question', 'single_question', questions.get_random_question),
@@ -77,7 +82,7 @@ class Menu:
                 'F': Option('Delete All questions', 'questions', questions.delete_all),
                 'G': Option('Reset questions to Default', 'questions', questions.reset_to_default),
                 'M': Option('Return to Main Menu', 'main', clear_screen),
-                'Q': Option('Quit Program', 'main', sys.exit)
+                'Q': Option('Quit Program', 'main', exit_program)
             },
             'answers': {
                 'B': Option('View an answer by ID', 'single_answer', answers.view_answer_by_id),
@@ -87,7 +92,7 @@ class Menu:
                 'F': Option('Delete All answers', 'answers', answers.delete_all),
                 'G': Option('Reset answers to Default', 'answers', answers.reset_to_default),
                 'M': Option('Return to Main Menu', 'main', clear_screen),
-                'Q': Option('Quit Program', 'main', sys.exit)
+                'Q': Option('Quit Program', 'main', exit_program)
             },
             'notes': {
                 'B': Option('View a note by ID', 'single_note', notes.view_note_by_id),
@@ -97,7 +102,7 @@ class Menu:
                 'F': Option('Delete All notes', 'notes', notes.delete_all),
                 'G': Option('Reset notes to Default', 'notes', notes.reset_to_default),
                 'M': Option('Return to Main Menu', 'main', clear_screen),
-                'Q': Option('Quit Program', 'main', sys.exit)
+                'Q': Option('Quit Program', 'main', exit_program)
             },
             'tips': {
                 'B': Option('View a tip by ID', 'single_tip', tips.view_tip_by_id),
@@ -107,9 +112,8 @@ class Menu:
                 'F': Option('Delete All tips', 'tips', tips.delete_all),
                 'G': Option('Reset tips to Default', 'tips', tips.reset_to_default),
                 'M': Option('Return to Main Menu', 'main', clear_screen),
-                'Q': Option('Quit Program', 'main', sys.exit)
+                'Q': Option('Quit Program', 'main', exit_program)
             },
-            # TODO: Need an option and function to print all the shit with the question
             'single_question': {
                 '1': Option('View All Question Info', 'single_question', questions.view_all_info),
                 '2': Option('Add an Answer to this Question', 'single_question', answers.add_answer),
@@ -119,28 +123,28 @@ class Menu:
                 'D': Option('Delete this Question', 'questions', questions.delete),
                 'R': Option('Return to Questions Menu', 'questions', clear_screen),
                 'M': Option('Return to Main Menu', 'main', clear_screen),
-                'Q': Option('Quit Program', 'main', sys.exit)
+                'Q': Option('Quit Program', 'main', exit_program)
             },
             'single_answer': {
                 'A': Option('Edit this Answer', 'answers', answers.edit_answer),
                 'E': Option('Delete this Answer', 'answers', answers.delete),
                 'G': Option('Return to answers Menu', 'answers', clear_screen),
                 'M': Option('Return to Main Menu', 'main', clear_screen),
-                'Q': Option('Quit Program', 'main', sys.exit)
+                'Q': Option('Quit Program', 'main', exit_program)
             },
             'single_note': {
                 'A': Option('Edit this Note', 'notes', notes.edit_note),
                 'E': Option('Delete this Note', 'notes', notes.delete),
                 'G': Option('Return to Notes Menu', 'notes', clear_screen),
                 'M': Option('Return to Main Menu', 'main', clear_screen),
-                'Q': Option('Quit Program', 'main', sys.exit)
+                'Q': Option('Quit Program', 'main', exit_program)
             },
             'single_tip': {
                 'A': Option('Edit this Tip', 'tips', tips.edit_tip),
                 'E': Option('Delete this Tip', 'tips', tips.delete),
                 'G': Option('Return to Tips Menu', 'tips', clear_screen),
                 'M': Option('Return to Main Menu', 'main', clear_screen),
-                'Q': Option('Quit Program', 'main', sys.exit)
+                'Q': Option('Quit Program', 'main', exit_program)
             },
         }
 
