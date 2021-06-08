@@ -52,6 +52,7 @@ class BaseTable():
         return (return_message, return_data)
 
     def delete_all(self, return_data=None):
+        printer.print_title_bar(f'Delete All {self.table_name}')
         self._drop_table()
         self.create_table()
         print(f'~~ Successfully Deleted All {self.table_name.capitalize()} ~~')
@@ -60,6 +61,7 @@ class BaseTable():
         return (return_message, return_data)
 
     def reset_to_default(self, return_data=None):
+        printer.print_title_bar(f'Reset All {self.table_name} to Default')
         self._drop_table()
         self.create_table()
         if self.defaults:
