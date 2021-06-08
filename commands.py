@@ -101,50 +101,61 @@ class Questions(BaseTable):
         })
 
     def get_random_question(self, return_data=None):
+        printer.print_title_bar('Random Question')
         cursor = db.select_random(self.table_name)
         record = cursor.fetchone()
-        # TODO: This fails if the table is empty
+        if record is not None:
         question_id = record[0]
-        printer.print_title_bar('Random Question')
-        printer.print_records(record, self.print_function)
+            printer.print_records(record, self.print_function)
+        else:
+            printer.print_no_records()
         return_message = ''
         return_data = {'question_id': question_id}
         return (return_message, return_data)
 
     def get_random_unanswered_question(self, return_data=None):
+        printer.print_title_bar('Random Unanswered Question')
         cursor = db.select_random(self.table_name, criteria={'answered': 0})
         record = cursor.fetchone()
-        question_id = record[0]
-        printer.print_title_bar('Random Unanswered Question')
-        printer.print_records(record, self.print_function)
+        if record is not None:
+            question_id = record[0]
+            printer.print_records(record, self.print_function)
+        else:
+            printer.print_no_records()
         return_message = ''
         return_data = {'question_id': question_id}
         return (return_message, return_data)
 
     def view_answered(self, return_data=None):
+        printer.print_title_bar('Answered Questions')
         cursor = db.select(self.table_name, criteria={'answered': 1})
         records = cursor.fetchall()
-        printer.print_title_bar('Answered Questions')
-        printer.print_records(records, self.print_function)
+        if records:
+            printer.print_records(records, self.print_function)
+        else:
+            printer.print_no_records()
         return_message = ''
         return_data = None
         return (return_message, return_data)
 
     def view_all_questions(self, return_data=None):
+        printer.print_title_bar('View all questions')
         cursor = db.select(self.table_name)
         records = cursor.fetchall()
-        printer.print_title_bar('View all questions')
         printer.print_records(records, self.print_function)
         return_message = ''
         return_data = None
         return (return_message, return_data)
 
     def view_question_by_id(self, return_data=None):
+        printer.print_title_bar('View by ID')
         id = input('ID to View: ')
         cursor = db.select(self.table_name, criteria={'id': id})
         record = cursor.fetchone()
-        printer.print_title_bar('View by ID')
-        printer.print_records(record, self.print_function)
+        if record is not None:
+            printer.print_records(record, self.print_function)
+        else:
+            printer.print_no_records()
         return_message = ''
         return_data = {'question_id': id}
         return (return_message, return_data)
@@ -155,11 +166,11 @@ class Questions(BaseTable):
         table_data = {'question': input_data, 'answered': 0}
         return_cursor = db.add(self.table_name, table_data)
         inserted_id = return_cursor.lastrowid
-        cursor = db.select(self.table_name, criteria={'id': inserted_id})
-        record = cursor.fetchone()
+        new_cursor = db.select(self.table_name, criteria={'id': inserted_id})
+        new_record = new_cursor.fetchone()
         print()
         print('~~ Successfully Added Question ~~')
-        printer.print_records(record, self.print_function)
+        printer.print_records(new_record, self.print_function)
         return_message = None
         return_data = None
         return (return_message, return_data)
@@ -172,18 +183,20 @@ class Questions(BaseTable):
             question_id = input('Enter question ID: ')
         cursor = db.select(self.table_name, criteria={'id': question_id})
         record = cursor.fetchone()
-        printer.print_records(record, self.print_function)
         if record is not None:
+            printer.print_records(record, self.print_function)
             edited_question = input('Enter the edited question: ')
             answered = validate_input(
                 f'Question is answered? (Currently: {"Y" if record[2] == 1 else "N"}), Y/N?', {'Y': 1, 'N': 0})
             update_data = {'id': question_id, 'question': edited_question, 'answered': answered}
             db.update(self.table_name, {'id': question_id}, update_data)
             edited_cursor = db.select(self.table_name, criteria={'id': question_id})
-            record = edited_cursor.fetchone()
+            edited_record = edited_cursor.fetchone()
             print()
             print('~~ Successfully Edited Question ~~')
-            printer.print_records(record, self.print_function)
+            printer.print_records(edited_record, self.print_function)
+        else:
+            printer.print_no_records()
         return_message = None
         return_data = None
         return (return_message, return_data)
@@ -209,18 +222,18 @@ class Answers(BaseTable):
         print()
         cursor = db.select(self.table_name, criteria={'id': id})
         record = cursor.fetchone()
-        printer.print_records(record, self.print_function)
         if record is not None:
+            printer.print_records(record, self.print_function)
             question_id = record[1]
             question_cursor = db.select('questions', criteria={'id': question_id})
             question_record = question_cursor.fetchone()
             print('Question for Reference:')
             print(question_record[1])
-            print()
+        else:
+            printer.print_no_records()
         return_message = None
         return_data = None
         return (return_message, return_data)
-
 
     def add_answer(self, return_data=None):
         printer.print_title_bar('Add Answer')
@@ -231,17 +244,19 @@ class Answers(BaseTable):
         print()
         cursor = db.select('questions', criteria={'id': question_id})
         record = cursor.fetchone()
-        printer.print_records(record, printer.question_printer)
-        
-        new_answer = input('Enter new answer: ')
-        table_data = {'question_id': question_id, 'answer': new_answer}
-        return_cursor = db.add(self.table_name, table_data)
-        inserted_id = return_cursor.lastrowid
-        cursor = db.select(self.table_name, criteria={'id': inserted_id})
-        record = cursor.fetchone()
-        print()
-        print('~~ Successfully Added Answer ~~')
-        printer.print_records(record, self.print_function)
+        if record is not None:
+            printer.print_records(record, printer.question_printer)
+            new_answer = input('Enter new answer: ')
+            table_data = {'question_id': question_id, 'answer': new_answer}
+            return_cursor = db.add(self.table_name, table_data)
+            inserted_id = return_cursor.lastrowid
+            new_cursor = db.select(self.table_name, criteria={'id': inserted_id})
+            new_record = new_cursor.fetchone()
+            print()
+            print('~~ Successfully Added Answer ~~')
+            printer.print_records(new_record, self.print_function)
+        else:
+            printer.print_no_records()
         return_message = None
         return_data = None
         return (return_message, return_data)
@@ -254,8 +269,8 @@ class Answers(BaseTable):
             id = input('Enter Answer ID: ')
         cursor = db.select(self.table_name, criteria={'id': id})
         record = cursor.fetchone()
-        printer.print_records(record, self.print_function)
         if record is not None:
+            printer.print_records(record, self.print_function)
             answer_id, question_id, answer = record
             question_cursor = db.select('questions', criteria={'id': question_id})
             question_record = question_cursor.fetchone()
@@ -266,10 +281,12 @@ class Answers(BaseTable):
             update_data = {'id': answer_id, 'question_id': question_id, 'answer': edited_answer}
             db.update(self.table_name, {'id': answer_id}, update_data)
             edited_cursor = db.select(self.table_name, criteria={'id': answer_id})
-            record = edited_cursor.fetchone()
+            edited_record = edited_cursor.fetchone()
             print()
             print('~~ Successfully Edited Question ~~')
-            printer.print_records(record, self.print_function)
+            printer.print_records(edited_record, self.print_function)
+        else:
+            printer.print_no_records()
         return_message = None
         return_data = None
         return (return_message, return_data)
