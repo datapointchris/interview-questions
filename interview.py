@@ -5,14 +5,14 @@ import sys
 import defaults
 
 
-def clear_screen():
+def clear_screen(return_data=None):
     clear = 'cls' if os.name == 'nt' else 'clear'
     print("\n" * 150)
     subprocess.call(clear, shell=True)
-    return (None, None)
+    return None
 
 
-def reset_program():
+def reset_program(return_data=None):
     make_sure = input('Are you sure you want to reset the program? Y/N')
     if make_sure.upper() == 'Y':
         # delete all tables
@@ -21,7 +21,7 @@ def reset_program():
         print('Program Reset Successfully!')
     else:
         print('That was a close call!')
-    return (None, None)
+    return None
 
 
 def get_user_input(label, required=True):
@@ -178,6 +178,5 @@ while True:
 
     command = menu.get_command()
     clear_screen()
-    return_message, return_data = command.execute(return_data=return_data)
-    print(return_message)
+    return_data = command.execute(return_data=return_data)
     menu.print_menu()
