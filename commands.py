@@ -1,7 +1,5 @@
 from database import DatabaseManager
 from printer import Printer
-from datetime import datetime
-import sys
 
 db = DatabaseManager('interview.db')
 printer = Printer()
