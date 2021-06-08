@@ -198,6 +198,37 @@ class Questions(Command):
             printer.print_no_records()
         return None
 
+    def view_all_info(self, return_data=None):
+        printer.print_title_bar('View All Question Info')
+        question_id = return_data.get('question_id')
+        question_cursor = db.select(self.table_name, criteria={'id': question_id})
+        question_record = question_cursor.fetchone()
+        printer.print_records(question_record, self.print_function)
+        answer_cursor = db.select('answers', criteria={'question_id': question_id})
+        answer_records = answer_cursor.fetchall()
+        print('Answers:')
+        print('----------')
+        if answer_records:
+            printer.print_records(answer_records, printer.answer_printer)
+        else:
+            printer.print_no_records()
+        note_cursor = db.select('notes', criteria={'question_id': question_id})
+        note_records = note_cursor.fetchall()
+        print('Notes:')
+        print('----------')
+        if note_records:
+            printer.print_records(note_records, printer.note_printer)
+        else:
+            printer.print_no_records()
+        tip_cursor = db.select('tips', criteria={'question_id': question_id})
+        tip_records = tip_cursor.fetchall()
+        print('Tips:')
+        print('----------')
+        if tip_records:
+            printer.print_records(tip_records, printer.tip_printer)
+        else:
+            printer.print_no_records()
+
 
 class Answers(Command):
 

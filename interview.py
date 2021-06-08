@@ -112,10 +112,10 @@ class Menu:
             # TODO: Need an option and function to print all the shit with the question
             'single_question': {
                 '1': Option('View All Question Info', 'single_question', questions.view_all_info),
-                '2': Option('Answer this Question', 'questions', answers.add_answer),
-                '3': Option('Add a Note to this Question', 'questions', notes.add_note),
-                '4': Option('Add a Tip to this Question', 'questions', tips.add_tip),
-                'E': Option('Edit this Question', 'questions', questions.edit_question),
+                '2': Option('Add an Answer to this Question', 'single_question', answers.add_answer),
+                '3': Option('Add a Note to this Question', 'single_question', notes.add_note),
+                '4': Option('Add a Tip to this Question', 'single_question', tips.add_tip),
+                'E': Option('Edit this Question', 'single_question', questions.edit_question),
                 'D': Option('Delete this Question', 'questions', questions.delete),
                 'R': Option('Return to Questions Menu', 'questions', clear_screen),
                 'M': Option('Return to Main Menu', 'main', clear_screen),
