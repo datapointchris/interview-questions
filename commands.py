@@ -37,13 +37,16 @@ class BaseTable():
 
     def delete(self, return_data=None):
         printer.print_title_bar('Delete by ID')
-        delete_id = get_valid_id('ID to Delete: ', self.table_name)
+        delete_id = input('ID to Delete: ')
         cursor = db.select(table_name=self.table_name, criteria={'id': delete_id})
         record = cursor.fetchone()
-        db.delete(self.table_name, {'id': delete_id})
-        print()
-        print(f'~~ Successfully Deleted {self.table_name[:-1:].capitalize()} ~~')
-        printer.print_records(record, self.print_function)
+        if record is not None:
+            db.delete(self.table_name, {'id': delete_id})
+            print()
+            print(f'~~ Successfully Deleted {self.table_name[:-1:].capitalize()} ~~')
+            printer.print_records(record, self.print_function)
+        else:
+            printer.print_no_records()
         return_message = ''
         return_data = None
         return (return_message, return_data)

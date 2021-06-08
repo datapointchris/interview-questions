@@ -108,8 +108,3 @@ class DatabaseManager:
             values,
         )
         return cursor
-
-    def id_exists(self, id, table_name):
-        sql = f'SELECT EXISTS(SELECT 1 FROM {table_name} WHERE id={id})'
-        is_valid = self._execute(sql)
-        return is_valid
