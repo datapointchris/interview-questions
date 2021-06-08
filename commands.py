@@ -36,9 +36,8 @@ class BaseTable():
             db.add(self.table_name, record)
 
     def delete(self, return_data=None):
-        # delete_id = input('ID to delete: ')
-        # TODO: validate_input(delete_id)
-        delete_id = get_valid_id('Give a valid id: ', self.table_name)
+        printer.print_title_bar('Delete by ID')
+        delete_id = get_valid_id('ID to Delete: ', self.table_name)
         cursor = db.select(table_name=self.table_name, criteria={'id': delete_id})
         record = cursor.fetchone()
         db.delete(self.table_name, {'id': delete_id})
@@ -105,10 +104,11 @@ class Questions(BaseTable):
         cursor = db.select_random(self.table_name)
         record = cursor.fetchone()
         if record is not None:
-        question_id = record[0]
+            question_id = record[0]
             printer.print_records(record, self.print_function)
         else:
             printer.print_no_records()
+            question_id = None
         return_message = ''
         return_data = {'question_id': question_id}
         return (return_message, return_data)
@@ -122,6 +122,7 @@ class Questions(BaseTable):
             printer.print_records(record, self.print_function)
         else:
             printer.print_no_records()
+            question_id = None
         return_message = ''
         return_data = {'question_id': question_id}
         return (return_message, return_data)
@@ -142,7 +143,10 @@ class Questions(BaseTable):
         printer.print_title_bar('View all questions')
         cursor = db.select(self.table_name)
         records = cursor.fetchall()
-        printer.print_records(records, self.print_function)
+        if records:
+            printer.print_records(records, self.print_function)
+        else:
+            printer.print_no_records()
         return_message = ''
         return_data = None
         return (return_message, return_data)
