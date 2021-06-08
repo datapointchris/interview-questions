@@ -60,7 +60,8 @@ class BaseTable():
         return (return_message, return_data)
 
     def reset_to_default(self, return_data=None):
-        self.delete_all()
+        self._drop_table()
+        self.create_table()
         if self.defaults:
             self._populate_defaults()
         print(f'~~ Successfully Set All {self.table_name.capitalize()} to Default ~~')
