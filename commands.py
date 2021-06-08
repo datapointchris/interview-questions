@@ -26,7 +26,7 @@ def validate_input(input_message, option_map):
     return option_map.get(choice)
 
 
-class BaseTable():
+class Command():
     '''Base class for handling all common table functions'''
 
     def __init__(self, defaults):
@@ -73,7 +73,7 @@ class BaseTable():
         db.drop_table(self.table_name)
 
 
-class Jobs(BaseTable):  # this class and table isn't going to be used in v1.0
+class Jobs(Command):  # this class and table isn't going to be used in v1.0
 
     def create_table(self, data=None):
         db.create_table('jobs', {
@@ -89,7 +89,7 @@ class Jobs(BaseTable):  # this class and table isn't going to be used in v1.0
         db.select('jobs', criteria={'reviewed': False})
 
 
-class Questions(BaseTable):
+class Questions(Command):
 
     def __init__(self, defaults=None, print_fuction=printer.question_printer):
         super().__init__(defaults)
@@ -199,7 +199,7 @@ class Questions(BaseTable):
         return None
 
 
-class Answers(BaseTable):
+class Answers(Command):
 
     def __init__(self, defaults=None, print_fuction=printer.answer_printer):
         super().__init__(defaults)
@@ -283,7 +283,7 @@ class Answers(BaseTable):
         return None
 
 
-class Notes(BaseTable):
+class Notes(Command):
 
     def __init__(self, defaults=None, print_fuction=printer.note_printer):
         super().__init__(defaults)
@@ -367,7 +367,7 @@ class Notes(BaseTable):
         return None
 
 
-class Tips(BaseTable):
+class Tips(Command):
 
     def __init__(self, defaults=None, print_fuction=printer.tip_printer):
         super().__init__(defaults)
