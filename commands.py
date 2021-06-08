@@ -7,6 +7,7 @@ db = DatabaseManager('interview.db')
 printer = Printer()
 
 
+
 def get_valid_id(prompt, table_name):
     id = input(f'{prompt}')
     answer = db.id_exists(id, table_name).fetchone()[0]
@@ -57,8 +58,9 @@ class BaseTable():
         print('\n\n')
         return None
 
-    def reset_to_default(self, return_data=None):
-        printer.print_title_bar(f'Reset All {self.table_name} to Default')
+    def reset_to_default(self, return_data=None, title=True):
+        if title:
+            printer.print_title_bar(f'Reset All {self.table_name} to Default')
         self._drop_table()
         self.create_table()
         if self.defaults:

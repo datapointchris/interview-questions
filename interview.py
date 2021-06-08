@@ -3,7 +3,9 @@ import os
 import subprocess
 import sys
 import defaults
+from printer import Printer
 
+printer = Printer()
 
 def clear_screen(return_data=None):
     clear = 'cls' if os.name == 'nt' else 'clear'
@@ -13,14 +15,18 @@ def clear_screen(return_data=None):
 
 
 def reset_program(return_data=None):
-    make_sure = input('Are you sure you want to reset the program? Y/N')
+    make_sure = input('Are you sure you want to reset the program? Y/N: ')
     if make_sure.upper() == 'Y':
-        # delete all tables
-        # create all tables
-        # populate tables with defaults
-        print('Program Reset Successfully!')
+        clear_screen()
+        printer.print_title_bar('Reset Program')
+        questions.reset_to_default(title=False)
+        answers.reset_to_default(title=False)
+        tips.reset_to_default(title=False)
+        notes.reset_to_default(title=False)
+
     else:
         print('That was a close call!')
+        print('\n\n')
     return None
 
 
@@ -103,6 +109,7 @@ class Menu:
                 'M': Option('Return to Main Menu', 'main', clear_screen),
                 'Q': Option('Quit Program', 'main', sys.exit)
             },
+            # TODO: Need an option and function to print all the shit with the question
             'single_question': {
                 '1': Option('Answer this Question', 'questions', answers.add_answer),
                 '2': Option('Add a Note to this Question', 'questions', notes.add_note),
