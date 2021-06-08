@@ -54,6 +54,7 @@ class BaseTable():
         self._drop_table()
         self.create_table()
         print(f'~~ Successfully Deleted All {self.table_name.capitalize()} ~~')
+        print('\n\n')
         return None
 
     def reset_to_default(self, return_data=None):
@@ -63,6 +64,7 @@ class BaseTable():
         if self.defaults:
             self._populate_defaults()
         print(f'~~ Successfully Set All {self.table_name.capitalize()} to Default ~~')
+        print('\n\n')
         return None
 
     def _drop_table(self, return_data=None):

@@ -32,9 +32,9 @@ def get_user_input(label, required=True):
 
 
 class Option:
-    def __init__(self, name, menu, command):
+    def __init__(self, name, menu_to_print, command):
         self.name = name
-        self.menu = menu
+        self.menu_to_print = menu_to_print
         self.command = command
 
     def execute(self, return_data):
@@ -50,8 +50,8 @@ class Menu:
             'main': {
 
                 # (name, menu, command)
-                '1': Option('Get a Random Question', 'questions', questions.get_random_question),
-                '2': Option('Get a Random Unanswered Question', 'questions', questions.get_random_question),
+                '1': Option('Get a Random Question', 'single_question', questions.get_random_question),
+                '2': Option('Get a Random Unanswered Question', 'single_question', questions.get_random_question),
                 '3': Option('Questions Menu', 'questions', clear_screen),
                 '4': Option('Answers Menu', 'answers', clear_screen),
                 '5': Option('Notes Menu', 'notes', clear_screen),
@@ -60,25 +60,11 @@ class Menu:
                 'Q': Option('Quit Program', 'main', sys.exit)
             },
             'questions': {
-                '1': Option('Get a Random Question', 'questions', questions.get_random_question),
-                '2': Option('Get a Random Unanswered Question', 'questions', questions.get_random_unanswered_question),
+                '1': Option('Get a Random Question', 'single_question', questions.get_random_question),
+                '2': Option('Get a Random Unanswered Question', 'single_question', questions.get_random_unanswered_question),
                 '3': Option('View Answered Questions', 'questions', questions.view_answered),
                 'A': Option('View All Questions', 'questions', questions.view_all_questions),
-                'B': Option('View a Question by ID', 'questions', questions.view_question_by_id),
-                'C': Option('Add a question', 'questions', questions.add_question),
-                'D': Option('Edit a question', 'questions', questions.edit_question),
-                'E': Option('Delete a question', 'questions', questions.delete),
-                'F': Option('Delete All questions', 'questions', questions.delete_all),
-                'G': Option('Reset questions to Default', 'questions', questions.reset_to_default),
-                'M': Option('Return to Main Menu', 'main', clear_screen),
-                'Q': Option('Quit Program', 'main', sys.exit)
-            },
-            'single_question': {
-                '1': Option('Answer this question', 'questions', answers.add_answer),
-                '2': Option('Get a Random Unanswered Question', 'questions', questions.get_random_unanswered_question),
-                '3': Option('View Answered Questions', 'questions', questions.view_answered),
-                'A': Option('View All Questions', 'questions', questions.view_all_questions),
-                'B': Option('View a Question by ID', 'questions', questions.view_question_by_id),
+                'B': Option('View a Question by ID', 'single_question', questions.view_question_by_id),
                 'C': Option('Add a question', 'questions', questions.add_question),
                 'D': Option('Edit a question', 'questions', questions.edit_question),
                 'E': Option('Delete a question', 'questions', questions.delete),
@@ -88,7 +74,7 @@ class Menu:
                 'Q': Option('Quit Program', 'main', sys.exit)
             },
             'answers': {
-                'B': Option('View an answer by ID', 'answers', answers.view_answer_by_id),
+                'B': Option('View an answer by ID', 'single_answer', answers.view_answer_by_id),
                 'C': Option('Add an answer', 'answers', answers.add_answer),
                 'D': Option('Edit an answer', 'answers', answers.edit_answer),
                 'E': Option('Delete an answer', 'answers', answers.delete),
@@ -98,7 +84,7 @@ class Menu:
                 'Q': Option('Quit Program', 'main', sys.exit)
             },
             'notes': {
-                'B': Option('View a note by ID', 'notes', notes.view_note_by_id),
+                'B': Option('View a note by ID', 'single_note', notes.view_note_by_id),
                 'C': Option('Add a note', 'notes', notes.add_note),
                 'D': Option('Edit a note', 'notes', notes.edit_note),
                 'E': Option('Delete a note', 'notes', notes.delete),
@@ -108,12 +94,43 @@ class Menu:
                 'Q': Option('Quit Program', 'main', sys.exit)
             },
             'tips': {
-                'B': Option('View a tip by ID', 'tips', tips.view_tip_by_id),
+                'B': Option('View a tip by ID', 'single_tip', tips.view_tip_by_id),
                 'C': Option('Add a tip', 'tips', tips.add_tip),
                 'D': Option('Edit a tip', 'tips', tips.edit_tip),
                 'E': Option('Delete a tip', 'tips', tips.delete),
                 'F': Option('Delete All tips', 'tips', tips.delete_all),
                 'G': Option('Reset tips to Default', 'tips', tips.reset_to_default),
+                'M': Option('Return to Main Menu', 'main', clear_screen),
+                'Q': Option('Quit Program', 'main', sys.exit)
+            },
+            'single_question': {
+                '1': Option('Answer this Question', 'questions', answers.add_answer),
+                '2': Option('Add a Note to this Question', 'questions', notes.add_note),
+                '3': Option('Add a Tip to this Question', 'questions', tips.add_tip),
+                'A': Option('Edit this Question', 'questions', questions.edit_question),
+                'E': Option('Delete this Question', 'questions', questions.delete),
+                'G': Option('Return to Questions Menu', 'questions', clear_screen),
+                'M': Option('Return to Main Menu', 'main', clear_screen),
+                'Q': Option('Quit Program', 'main', sys.exit)
+            },
+            'single_answer': {
+                'A': Option('Edit this Answer', 'answers', answers.edit_answer),
+                'E': Option('Delete this Answer', 'answers', answers.delete),
+                'G': Option('Return to answers Menu', 'answers', clear_screen),
+                'M': Option('Return to Main Menu', 'main', clear_screen),
+                'Q': Option('Quit Program', 'main', sys.exit)
+            },
+            'single_note': {
+                'A': Option('Edit this Note', 'notes', notes.edit_note),
+                'E': Option('Delete this Note', 'notes', notes.delete),
+                'G': Option('Return to Notes Menu', 'notes', clear_screen),
+                'M': Option('Return to Main Menu', 'main', clear_screen),
+                'Q': Option('Quit Program', 'main', sys.exit)
+            },
+            'single_tip': {
+                'A': Option('Edit this Tip', 'tips', tips.edit_tip),
+                'E': Option('Delete this Tip', 'tips', tips.delete),
+                'G': Option('Return to Tips Menu', 'tips', clear_screen),
                 'M': Option('Return to Main Menu', 'main', clear_screen),
                 'Q': Option('Quit Program', 'main', sys.exit)
             },
@@ -131,7 +148,7 @@ class Menu:
             print()
             choice = input('Choose option: ').upper()
         command = submenu.get(choice)
-        self.current_menu = command.menu
+        self.current_menu = command.menu_to_print
         return command
 
     def print_menu(self):
