@@ -173,17 +173,17 @@ class Questions(BaseTable):
         cursor = db.select(self.table_name, criteria={'id': question_id})
         record = cursor.fetchone()
         printer.print_records(record, self.print_function)
-        edited_question = input('Enter the edited question: ')
-        answered = validate_input(
-            f'Question is answered? (Currently: {"Y" if record[2] == 1 else "N"}), Y/N?', {'Y': 1, 'N': 0})
-        update_data = {'id': question_id, 'question': edited_question, 'answered': answered}
-        db.update(self.table_name, {'id': question_id}, update_data)
-        edited_cursor = db.select(self.table_name, criteria={'id': question_id})
-        record = edited_cursor.fetchone()
-        print()
-        print('~~ Successfully Edited Question ~~')
-        printer.print_records(record, self.print_function)
-        # return_message = '~~ Successfully edited question ~~'
+        if record is not None:
+            edited_question = input('Enter the edited question: ')
+            answered = validate_input(
+                f'Question is answered? (Currently: {"Y" if record[2] == 1 else "N"}), Y/N?', {'Y': 1, 'N': 0})
+            update_data = {'id': question_id, 'question': edited_question, 'answered': answered}
+            db.update(self.table_name, {'id': question_id}, update_data)
+            edited_cursor = db.select(self.table_name, criteria={'id': question_id})
+            record = edited_cursor.fetchone()
+            print()
+            print('~~ Successfully Edited Question ~~')
+            printer.print_records(record, self.print_function)
         return_message = None
         return_data = None
         return (return_message, return_data)
@@ -246,28 +246,33 @@ class Answers(BaseTable):
         return_data = None
         return (return_message, return_data)
 
-    def edit_answer(self, data):
+    def edit_answer(self, return_data=None):
         printer.print_title_bar('Edit Answer')
-        id = input('ID to Edit: ')
-        answer_record = db.select(self.table_name, criteria={'id': id}).fetchone()
-        if answer_record:
-            answer_id, question_id, answer = answer_record
-            question_record = db.select(table_name='questions',
-                                        criteria={'id': question_id}).fetchone()
-            printer.print_title_bar('View by ID')
+        if return_data is not None:
+            id = return_data.get('answer_id')
+        else:
+            id = input('Enter Answer ID: ')
+        cursor = db.select(self.table_name, criteria={'id': id})
+        record = cursor.fetchone()
+        printer.print_records(record, self.print_function)
+        if record is not None:
+            answer_id, question_id, answer = record
+            question_cursor = db.select('questions', criteria={'id': question_id})
+            question_record = question_cursor.fetchone()
             print('Question for Reference:')
-            printer.question_printer(record=question_record)
-            print()
-            printer.answer_printer(record=answer_record)
+            print(question_record[1])
             print()
             edited_answer = input('Enter the new answer: ')
             update_data = {'id': answer_id, 'question_id': question_id, 'answer': edited_answer}
-            db.update(self.table_name, {'id': id}, update_data)
-        else:
-            print('No matching records found.')
+            db.update(self.table_name, {'id': answer_id}, update_data)
+            edited_cursor = db.select(self.table_name, criteria={'id': answer_id})
+            record = edited_cursor.fetchone()
             print()
-        print('-' * 80)
-        print()
+            print('~~ Successfully Edited Question ~~')
+            printer.print_records(record, self.print_function)
+        return_message = None
+        return_data = None
+        return (return_message, return_data)
 
 
 class Notes(BaseTable):

@@ -17,15 +17,15 @@ class Printer:
         print('\n'.join([top_border, title, bottom_border, '']))
 
     def print_records(self, records, print_function):
-        if records is not None:
-            if isinstance(records, list):
-                for record in records:
-                    print_function(record)
-            else:
-                print_function(records)
+        if isinstance(records, list):
+            for record in records:
+                print_function(record)
         else:
-            print('No matching records found.')
-            print()
+            print_function(records)
+
+    def print_no_records(self):
+        print('No matching records found.')
+        print()
         print('-' * 80)
         print()
 
@@ -56,4 +56,3 @@ class Printer:
         print(f'Question ID: {question_id}')
         print(f'Tip: {tip}')
         print()
-
