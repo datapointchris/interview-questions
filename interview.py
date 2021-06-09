@@ -181,12 +181,10 @@ class Menu:
 
 
 # MAIN PROGRAM
-
+first_run = commands.check_for_first_run()
 
 questions = commands.Questions(defaults=defaults.default_questions)
 questions.create_table()
-# TODO: This shouldn't load defaults every time, only first time
-questions._populate_defaults()
 
 answers = commands.Answers()
 answers.create_table()
@@ -197,6 +195,9 @@ tips.create_table()
 notes = commands.Notes()
 notes.create_table()
 
+if first_run:
+    questions._populate_defaults()
+
 clear_screen()
 menu = Menu()
 
@@ -204,7 +205,6 @@ menu.print_menu()
 return_data = None
 
 while True:
-
     command = menu.get_command()
     clear_screen()
     return_data = command.execute(return_data=return_data)

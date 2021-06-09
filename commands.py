@@ -5,6 +5,10 @@ db = DatabaseManager('interview.db')
 printer = Printer()
 
 
+def check_for_first_run():
+    return (db.table_exists().fetchone()[0] == 0)
+
+
 def get_valid_id(prompt, table_name):
     id = input(f'{prompt}')
     answer = db.id_exists(id, table_name).fetchone()[0]
@@ -35,7 +39,10 @@ class Command():
 
     def delete(self, return_data=None):
         printer.print_title_bar('Delete by ID')
-        delete_id = input('ID to Delete: ')
+        if return_data is not None:
+            delete_id = return_data.get('return_id')
+        else:
+            delete_id = input('ID to Delete: ')
         cursor = db.select(table_name=self.table_name, criteria={'id': delete_id})
         record = cursor.fetchone()
         if record is not None:
@@ -110,7 +117,7 @@ class Questions(Command):
         else:
             printer.print_no_records()
             question_id = None
-        return_data = {'question_id': question_id}
+        return_data = {'return_id': question_id}
         return return_data
 
     def get_random_unanswered_question(self, return_data=None):
@@ -123,7 +130,7 @@ class Questions(Command):
         else:
             printer.print_no_records()
             question_id = None
-        return_data = {'question_id': question_id}
+        return_data = {'return_id': question_id}
         return return_data
 
     def view_answered(self, return_data=None):
@@ -155,7 +162,7 @@ class Questions(Command):
             printer.print_records(record, self.print_function)
         else:
             printer.print_no_records()
-        return_data = {'question_id': id}
+        return_data = {'return_id': id}
         return return_data
 
     def add_question(self, return_data=None):
@@ -169,13 +176,13 @@ class Questions(Command):
         print()
         print('~~ Successfully Added Question ~~')
         printer.print_records(new_record, self.print_function)
-        return_data = {'question_id': inserted_id}
+        return_data = {'return_id': inserted_id}
         return return_data
 
     def edit_question(self, return_data=None):
         printer.print_title_bar('Edit Question')
         if return_data is not None:
-            question_id = return_data.get('question_id')
+            question_id = return_data.get('return_id')
         else:
             question_id = input('Enter question ID: ')
         cursor = db.select(self.table_name, criteria={'id': question_id})
@@ -194,40 +201,44 @@ class Questions(Command):
             printer.print_records(edited_record, self.print_function)
         else:
             printer.print_no_records()
-        return_data = {'question_id': question_id}
+        return_data = {'return_id': question_id}
         return return_data
 
     def view_all_info(self, return_data=None):
         printer.print_title_bar('View All Question Info')
-        question_id = return_data.get('question_id')
+        question_id = return_data.get('return_id')
         question_cursor = db.select(self.table_name, criteria={'id': question_id})
         question_record = question_cursor.fetchone()
-        printer.print_records(question_record, self.print_function)
-        answer_cursor = db.select('answers', criteria={'question_id': question_id})
-        answer_records = answer_cursor.fetchall()
-        print('Answers:')
-        print('----------')
-        if answer_records:
-            printer.print_records(answer_records, printer.answer_printer)
+        if question_record is not None:
+            printer.print_records(question_record, self.print_function)
+            answer_cursor = db.select('answers', criteria={'question_id': question_id})
+            answer_records = answer_cursor.fetchall()
+            print('Answers:')
+            print('----------')
+            if answer_records:
+                printer.print_records(answer_records, printer.answer_printer)
+            else:
+                printer.print_no_records()
+            note_cursor = db.select('notes', criteria={'question_id': question_id})
+            note_records = note_cursor.fetchall()
+            print('Notes:')
+            print('----------')
+            if note_records:
+                printer.print_records(note_records, printer.note_printer)
+            else:
+                printer.print_no_records()
+            tip_cursor = db.select('tips', criteria={'question_id': question_id})
+            tip_records = tip_cursor.fetchall()
+            print('Tips:')
+            print('----------')
+            if tip_records:
+                printer.print_records(tip_records, printer.tip_printer)
+            else:
+                printer.print_no_records()
         else:
             printer.print_no_records()
-        note_cursor = db.select('notes', criteria={'question_id': question_id})
-        note_records = note_cursor.fetchall()
-        print('Notes:')
-        print('----------')
-        if note_records:
-            printer.print_records(note_records, printer.note_printer)
-        else:
-            printer.print_no_records()
-        tip_cursor = db.select('tips', criteria={'question_id': question_id})
-        tip_records = tip_cursor.fetchall()
-        print('Tips:')
-        print('----------')
-        if tip_records:
-            printer.print_records(tip_records, printer.tip_printer)
-        else:
-            printer.print_no_records()
-        return_data = {'question_id': question_id}
+            question_id = None
+        return_data = {'return_id': question_id}
         return return_data
 
 
@@ -260,13 +271,14 @@ class Answers(Command):
             print(question_record[1])
         else:
             printer.print_no_records()
-        return_data = {'answer_id': answer_id, 'question_id': question_id}
+            answer_id = None
+        return_data = {'return_id': answer_id}
         return return_data
 
     def add_answer(self, return_data=None):
         printer.print_title_bar('Add Answer')
         if return_data is not None:
-            question_id = return_data.get('question_id')
+            question_id = return_data.get('return_id')
         else:
             question_id = input('Enter question ID: ')
         print()
@@ -284,17 +296,18 @@ class Answers(Command):
             print('~~ Successfully Added Answer ~~')
             printer.print_records(new_record, self.print_function)
             # update question to answered
-            update_data = {'id': question_id, 'answered': 'Y'}
+            update_data = {'id': question_id, 'answered': 1}
             db.update('questions', {'id': question_id}, update_data)
         else:
             printer.print_no_records()
-        return_data = {'answer_id': answer_id, 'question_id': question_id}
+            question_id = None
+        return_data = {'return_id': question_id}
         return return_data
 
     def edit_answer(self, return_data=None):
         printer.print_title_bar('Edit Answer')
         if return_data is not None:
-            id = return_data.get('answer_id')
+            id = return_data.get('return_id')
         else:
             id = input('Enter Answer ID: ')
         cursor = db.select(self.table_name, criteria={'id': id})
@@ -317,7 +330,8 @@ class Answers(Command):
             printer.print_records(edited_record, self.print_function)
         else:
             printer.print_no_records()
-        return_data = {'answer_id': answer_id, 'question_id': question_id}
+            answer_id = None
+        return_data = {'return_id': answer_id}
         return return_data
 
 
@@ -350,13 +364,14 @@ class Notes(Command):
             print(question_record[1])
         else:
             printer.print_no_records()
-        return_data = {'note_id': note_id, 'question_id': question_id}
+            note_id = None
+        return_data = {'return_id': note_id}
         return return_data
 
     def add_note(self, return_data=None):
         printer.print_title_bar('Add note')
         if return_data is not None:
-            question_id = return_data.get('question_id')
+            question_id = return_data.get('return_id')
         else:
             question_id = input('Enter question ID: ')
         print()
@@ -375,13 +390,14 @@ class Notes(Command):
             printer.print_records(note_record, self.print_function)
         else:
             printer.print_no_records()
-        return_data = {'note_id': note_id, 'question_id': question_id}
+            question_id = None
+        return_data = {'question_id': question_id}
         return return_data
 
     def edit_note(self, return_data=None):
         printer.print_title_bar('Edit note')
         if return_data is not None:
-            id = return_data.get('note_id')
+            id = return_data.get('return_id')
         else:
             id = input('Enter note ID: ')
         cursor = db.select(self.table_name, criteria={'id': id})
@@ -404,7 +420,8 @@ class Notes(Command):
             printer.print_records(edited_record, self.print_function)
         else:
             printer.print_no_records()
-        return_data = {'note_id': note_id, 'question_id': question_id}
+            note_id = None
+        return_data = {'return_id': note_id}
         return return_data
 
 
@@ -437,13 +454,14 @@ class Tips(Command):
             print(question_record[1])
         else:
             printer.print_no_records()
-        return_data = {'tip_id': tip_id, 'question_id': question_id}
+            tip_id = None
+        return_data = {'return_id': tip_id}
         return return_data
 
     def add_tip(self, return_data=None):
         printer.print_title_bar('Add tip')
         if return_data is not None:
-            question_id = return_data.get('question_id')
+            question_id = return_data.get('return_id')
         else:
             question_id = input('Enter question ID: ')
         print()
@@ -462,13 +480,14 @@ class Tips(Command):
             printer.print_records(tip_record, self.print_function)
         else:
             printer.print_no_records()
-        return_data = {'tip_id': tip_id, 'question_id': question_id}
+            question_id = None
+        return_data = {'return_id': question_id}
         return return_data
 
     def edit_tip(self, return_data=None):
         printer.print_title_bar('Edit tip')
         if return_data is not None:
-            id = return_data.get('tip_id')
+            id = return_data.get('return_id')
         else:
             id = input('Enter tip ID: ')
         cursor = db.select(self.table_name, criteria={'id': id})
@@ -491,5 +510,6 @@ class Tips(Command):
             printer.print_records(edited_record, self.print_function)
         else:
             printer.print_no_records()
-        return_data = {'tip_id': tip_id, 'question_id': question_id}
+            tip_id = None
+        return_data = {'return_id': tip_id}
         return return_data

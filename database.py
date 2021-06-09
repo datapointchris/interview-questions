@@ -14,9 +14,9 @@ class DatabaseManager:
             cursor.execute(statement, values or [])
             return cursor
 
-    # def get_table_col_names(self, table_name):
-    #     with self.connection:
-    #         cursor = self.connection.cursor()
+    def table_exists(self):
+        query = '''SELECT count(name) FROM sqlite_master WHERE type="table" AND name="questions" '''
+        return self._execute(query)
 
     def create_table(self, table_name, columns):
         columns_with_types = [
