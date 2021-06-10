@@ -49,7 +49,6 @@ class Command():
             db.delete(self.table_name, {'id': delete_id})
             print()
             print(f'~~ Successfully Deleted {self.table_name[:-1:].capitalize()} ~~')
-            printer.print_records(record, self.print_function)
         else:
             printer.print_no_records()
         return None
@@ -204,8 +203,67 @@ class Questions(Command):
         return_data = {'return_id': question_id}
         return return_data
 
-    def view_all_info(self, return_data=None):
-        printer.print_title_bar('View All Question Info')
+    def delete_question(self, return_data=None):
+        printer.print_title_bar('Delete by ID')
+        if return_data is not None:
+            question_id = return_data.get('return_id')
+        else:
+            question_id = input('ID to Delete: ')
+        question_cursor = db.select(table_name=self.table_name, criteria={'id': question_id})
+        question_record = question_cursor.fetchone()
+        if question_record is not None:
+            print('     WARNING     '.center(80, '!'))
+            print()
+            print('~~ This Question has the following associated data: ~~')
+            print()
+            printer.print_records(question_record, self.print_function)
+            answer_cursor = db.select('answers', criteria={'question_id': question_id})
+            answer_records = answer_cursor.fetchall()
+            print('Answers:')
+            print('----------')
+            if answer_records:
+                printer.print_records(answer_records, printer.answer_printer)
+            else:
+                printer.print_no_records()
+            note_cursor = db.select('notes', criteria={'question_id': question_id})
+            note_records = note_cursor.fetchall()
+            print('Notes:')
+            print('----------')
+            if note_records:
+                printer.print_records(note_records, printer.note_printer)
+            else:
+                printer.print_no_records()
+            tip_cursor = db.select('tips', criteria={'question_id': question_id})
+            tip_records = tip_cursor.fetchall()
+            print('Tips:')
+            print('----------')
+            if tip_records:
+                printer.print_records(tip_records, printer.tip_printer)
+            else:
+                printer.print_no_records()
+
+            make_sure = input('Are you sure you want to delete this question? Y/N: ')
+            if make_sure.upper() == 'Y':
+                db.delete('questions', {'id': question_id})
+                if answer_records:
+                    for record in answer_records:
+                        db.delete('answers', {'id': record[0]})
+                if note_records:
+                    for record in note_records:
+                        db.delete('notes', {'id': record[0]})
+                if tip_records:
+                    for record in tip_records:
+                        db.delete('tips', {'id': record[0]})
+
+                print()
+                print(f'~~ Successfully Deleted {self.table_name[:-1:].capitalize()} ~~')
+        else:
+            printer.print_no_records()
+        return None
+
+    def view_all_info(self, return_data=None, title=True):
+        if title:
+            printer.print_title_bar('View All Question Info')
         question_id = return_data.get('return_id')
         question_cursor = db.select(self.table_name, criteria={'id': question_id})
         question_record = question_cursor.fetchone()
@@ -269,6 +327,7 @@ class Answers(Command):
             question_record = question_cursor.fetchone()
             print('Question for Reference:')
             print(question_record[1])
+            print()
         else:
             printer.print_no_records()
             answer_id = None
@@ -362,6 +421,7 @@ class Notes(Command):
             question_record = question_cursor.fetchone()
             print('Question for Reference:')
             print(question_record[1])
+            print()
         else:
             printer.print_no_records()
             note_id = None
@@ -391,7 +451,7 @@ class Notes(Command):
         else:
             printer.print_no_records()
             question_id = None
-        return_data = {'question_id': question_id}
+        return_data = {'return_id': question_id}
         return return_data
 
     def edit_note(self, return_data=None):
@@ -452,6 +512,7 @@ class Tips(Command):
             question_record = question_cursor.fetchone()
             print('Question for Reference:')
             print(question_record[1])
+            print()
         else:
             printer.print_no_records()
             tip_id = None

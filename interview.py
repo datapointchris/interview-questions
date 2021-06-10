@@ -78,7 +78,7 @@ class Menu:
                 'B': Option('View a Question by ID', 'single_question', questions.view_question_by_id),
                 'C': Option('Add a question', 'questions', questions.add_question),
                 'D': Option('Edit a question', 'questions', questions.edit_question),
-                'E': Option('Delete a question', 'questions', questions.delete),
+                'E': Option('Delete a question', 'questions', questions.delete_question),
                 'F': Option('Delete All questions', 'questions', questions.delete_all),
                 'G': Option('Reset questions to Default', 'questions', questions.reset_to_default),
                 'M': Option('Return to Main Menu', 'main', clear_screen),
@@ -120,29 +120,29 @@ class Menu:
                 '3': Option('Add a Note to this Question', 'single_question', notes.add_note),
                 '4': Option('Add a Tip to this Question', 'single_question', tips.add_tip),
                 'E': Option('Edit this Question', 'single_question', questions.edit_question),
-                'D': Option('Delete this Question', 'questions', questions.delete),
+                'D': Option('Delete this Question', 'questions', questions.delete_question),
                 'R': Option('Return to Questions Menu', 'questions', clear_screen),
                 'M': Option('Return to Main Menu', 'main', clear_screen),
                 'Q': Option('Quit Program', 'main', exit_program)
             },
             'single_answer': {
-                'A': Option('Edit this Answer', 'answers', answers.edit_answer),
-                'E': Option('Delete this Answer', 'answers', answers.delete),
-                'G': Option('Return to answers Menu', 'answers', clear_screen),
+                'E': Option('Edit this Answer', 'answers', answers.edit_answer),
+                'D': Option('Delete this Answer', 'answers', answers.delete),
+                'R': Option('Return to Answers Menu', 'answers', clear_screen),
                 'M': Option('Return to Main Menu', 'main', clear_screen),
                 'Q': Option('Quit Program', 'main', exit_program)
             },
             'single_note': {
-                'A': Option('Edit this Note', 'notes', notes.edit_note),
-                'E': Option('Delete this Note', 'notes', notes.delete),
-                'G': Option('Return to Notes Menu', 'notes', clear_screen),
+                'E': Option('Edit this Note', 'notes', notes.edit_note),
+                'D': Option('Delete this Note', 'notes', notes.delete),
+                'R': Option('Return to Notes Menu', 'notes', clear_screen),
                 'M': Option('Return to Main Menu', 'main', clear_screen),
                 'Q': Option('Quit Program', 'main', exit_program)
             },
             'single_tip': {
-                'A': Option('Edit this Tip', 'tips', tips.edit_tip),
-                'E': Option('Delete this Tip', 'tips', tips.delete),
-                'G': Option('Return to Tips Menu', 'tips', clear_screen),
+                'E': Option('Edit this Tip', 'tips', tips.edit_tip),
+                'D': Option('Delete this Tip', 'tips', tips.delete),
+                'R': Option('Return to Tips Menu', 'tips', clear_screen),
                 'M': Option('Return to Main Menu', 'main', clear_screen),
                 'Q': Option('Quit Program', 'main', exit_program)
             },
