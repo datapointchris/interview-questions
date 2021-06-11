@@ -1,3 +1,5 @@
+""" This module houses all of the commands for adding, editing, and deleting entries into the database.
+"""
 from database import DatabaseManager
 from printer import Printer
 
@@ -6,6 +8,7 @@ printer = Printer()
 
 
 def check_for_first_run():
+
     return (db.table_exists().fetchone()[0] == 0)
 
 
@@ -28,7 +31,7 @@ def validate_input(input_message, option_map):
 
 
 class Command():
-    '''Base class for handling all common table functions'''
+    """Base class for handling all common commands"""
 
     def __init__(self, defaults):
         self.defaults = defaults
@@ -54,6 +57,7 @@ class Command():
         return None
 
     def delete_all(self, return_data=None):
+        """ Drop and re-create the table"""
         printer.print_title_bar(f'Delete All {self.table_name}')
         self._drop_table()
         self.create_table()
@@ -62,6 +66,14 @@ class Command():
         return None
 
     def reset_to_default(self, return_data=None, title=True):
+        """ Drop and re-create the table, include defaults if available.
+
+        Parameters
+        ----------
+        title : bool
+            Display the title bar.  Set to False when resetting multiple tables at once (`reset_program` function)
+
+        """
         if title:
             printer.print_title_bar(f'Reset All {self.table_name} to Default')
         self._drop_table()
@@ -77,6 +89,9 @@ class Command():
 
 
 class Jobs(Command):  # this class and table isn't going to be used in v1.0
+    """Jobs commands
+    NOTE: This class is not being implemented until v2.0!
+    """
 
     def create_table(self, data=None):
         db.create_table('jobs', {
@@ -93,6 +108,7 @@ class Jobs(Command):  # this class and table isn't going to be used in v1.0
 
 
 class Questions(Command):
+    """Questions commands"""
 
     def __init__(self, defaults=None, print_fuction=printer.question_printer):
         super().__init__(defaults)
@@ -133,6 +149,7 @@ class Questions(Command):
         return return_data
 
     def view_answered(self, return_data=None):
+        """ View only questions that have been marked as answered"""
         printer.print_title_bar('Answered Questions')
         cursor = db.select(self.table_name, criteria={'answered': 1})
         records = cursor.fetchall()
@@ -204,6 +221,7 @@ class Questions(Command):
         return return_data
 
     def delete_question(self, return_data=None):
+        """ Deletes question and all associated answers, notes, and tips"""
         printer.print_title_bar('Delete by ID')
         if return_data is not None:
             question_id = return_data.get('return_id')
@@ -262,6 +280,7 @@ class Questions(Command):
         return None
 
     def view_all_info(self, return_data=None, title=True):
+        """ View question and associated answers, notes, and tips."""
         if title:
             printer.print_title_bar('View All Question Info')
         question_id = return_data.get('return_id')
@@ -301,6 +320,7 @@ class Questions(Command):
 
 
 class Answers(Command):
+    """Answers commands"""
 
     def __init__(self, defaults=None, print_fuction=printer.answer_printer):
         super().__init__(defaults)
@@ -395,6 +415,7 @@ class Answers(Command):
 
 
 class Notes(Command):
+    """Notes commands"""
 
     def __init__(self, defaults=None, print_fuction=printer.note_printer):
         super().__init__(defaults)
@@ -486,6 +507,7 @@ class Notes(Command):
 
 
 class Tips(Command):
+    """Tips commands"""
 
     def __init__(self, defaults=None, print_fuction=printer.tip_printer):
         super().__init__(defaults)

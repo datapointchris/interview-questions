@@ -16,6 +16,7 @@ def clear_screen(return_data=None):
 
 
 def reset_program(return_data=None):
+    """ Reset entire program to defaults. """
     make_sure = input('Are you sure you want to reset the program? Y/N: ')
     if make_sure.upper() == 'Y':
         clear_screen()
@@ -35,13 +36,6 @@ def exit_program(return_date=None):
     sys.exit('👍 👍 👍 THANKS FOR PRACTICING 👍 👍 👍')
 
 
-def get_user_input(label, required=True):
-    value = input(f'{label}: ') or None
-    while required and not value:
-        value = input(f'{label}: ') or None
-    return value
-
-
 class Option:
     def __init__(self, name, menu_to_print, command):
         self.name = name
@@ -55,6 +49,9 @@ class Option:
 
 
 class Menu:
+    '''
+
+    '''
     def __init__(self):
         self.current_menu = 'main'
         self._menus = {

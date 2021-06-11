@@ -1,3 +1,6 @@
+""" Defaults to be loaded upon first program run or when a table is reset."""
+
+
 questions = [
     'Tell me about yourself.',
     'Run through your resume for me.',
