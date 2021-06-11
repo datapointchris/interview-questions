@@ -37,6 +37,7 @@ def exit_program(return_date=None):
 
 
 class Option:
+    """ Class for holding each of the menu options """
     def __init__(self, name, menu_to_print, command):
         self.name = name
         self.menu_to_print = menu_to_print
@@ -49,9 +50,15 @@ class Option:
 
 
 class Menu:
-    '''
+    """ Class for holding and displaying all of the menus.
 
-    '''
+    Parameters
+    ----------
+    current_menu : `str`
+        Menu assigned by `get_menu` method for use in `print_menu` method.
+        Menus are not attached to methods, any menu can be printed after any method call.
+
+    """
     def __init__(self):
         self.current_menu = 'main'
         self._menus = {
@@ -149,6 +156,14 @@ class Menu:
         return choice in options
 
     def get_command(self):
+        """ Retrieves user input for command, validates against available options.
+        Side effect: Sets `current_menu` for menu to print after command is executed.
+
+        Returns
+        -------
+        command: `func`
+            Function to execute.
+        """
         submenu = self._menus.get(self.current_menu)
         choice = input('Choose option: ').upper()
         while not self._option_choice_is_valid(choice, options=submenu):
@@ -161,6 +176,7 @@ class Menu:
         return command
 
     def print_menu(self):
+        """Print `current_menu` set by `get_command` method"""
         border = '⑊ '
         width = (80 - len(self.current_menu)) // 6
         padding = 5

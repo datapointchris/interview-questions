@@ -70,7 +70,7 @@ class Command():
 
         Parameters
         ----------
-        title : bool
+        title : `bool`
             Display the title bar.  Set to False when resetting multiple tables at once (`reset_program` function)
 
         """
