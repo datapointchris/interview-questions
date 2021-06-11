@@ -1,5 +1,3 @@
-
-
 class Printer:
     '''Prints database records'''
 

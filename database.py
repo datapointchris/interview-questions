@@ -1,7 +1,12 @@
+""" Database functions
+"""
+
 import sqlite3
 
 
 class DatabaseManager:
+    """ Handles all database transactions.
+    """
     def __init__(self, database_filename):
         self.connection = sqlite3.connect(database_filename)
 
