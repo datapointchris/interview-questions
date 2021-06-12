@@ -3,9 +3,6 @@
 
 from . import commands, defaults
 from .menu import Menu, clear_screen
-from .printer import Printer
-
-printer = Printer()
 
 
 def main():

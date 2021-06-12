@@ -4,6 +4,15 @@ import os
 import subprocess
 import sys
 
+from .printer import Printer
+from . import commands
+
+printer = Printer()
+questions = commands.Questions()
+answers = commands.Answers()
+tips = commands.Tips()
+notes = commands.Notes()
+
 
 def clear_screen(return_data=None):
     clear = 'cls' if os.name == 'nt' else 'clear'
@@ -34,6 +43,7 @@ def exit_program(return_date=None):
 
 class Option:
     """ Class for holding each of the menu options """
+
     def __init__(self, name, menu_to_print, command):
         self.name = name
         self.menu_to_print = menu_to_print
@@ -55,6 +65,7 @@ class Menu:
         Menus are not attached to methods, any menu can be printed after any method call.
 
     """
+
     def __init__(self):
         self.current_menu = 'main'
         self._menus = {
