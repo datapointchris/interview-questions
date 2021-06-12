@@ -1,10 +1,10 @@
 
 <h1 align="center">
-  Interview Questions Flash Card Style
+  Interview Questions Practice
   <br>
 </h1>
 
-<h4 align="center">This program stores and displays interview questions in a flash card style.<br />
+<h4 align="center">This program stores and displays interview questions and corresponding answers, notes, and tips.<br />
 </h4>
 
 <p align="center">
@@ -29,35 +29,25 @@ This is a flash card interface, used for interview questions currently.
 
 ## Features
 
-* Command line interface to display a new question each time the program is run
+* Command line interface to display random practice questions
+* Optionally add answers, notes, and tips
+* Keeps track of what questions you have answered
 
 
 ## Future Features
 
-* Program interface will be interactive
 * Move program to webpage using flask for better interface
-
-
-## File Descriptions
-
-`interview_questions.py` - Run this file to execute the program.
-
+* Add function to include job descriptions
 
 
 ## How To Use
 
 
 ```bash
-# Clone this repository
-$ git clone https://github.com/datapointchris/interview_questions
+pip install interview-star-questions
 
-# Go into the repository
-$ cd interview_questions
-
-# Run the app
-$ python interview.py
+interview
 ```
-
 
 ## Requirements
 
