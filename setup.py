@@ -9,16 +9,19 @@ import os
 import sys
 from shutil import rmtree
 
-from setuptools import find_packages, setup, Command
+from setuptools import Command, find_packages, setup
+
+from interview_questions import __version__
 
 # Package meta-data.
-NAME = 'mypackage'
-DESCRIPTION = 'My short description for my project.'
-URL = 'https://github.com/me/myproject'
-EMAIL = 'me@example.com'
-AUTHOR = 'Awesome Soul'
-REQUIRES_PYTHON = '>=3.6.0'
-VERSION = None
+NAME = 'Interview Questions'
+DESCRIPTION = '''Command Line Program that allows you to add, edit, and delete interview questions
+                and add related answers, notes and tips.'''
+URL = 'https://github.com/datapointchris/interview_questions'
+EMAIL = 'datapointchris@gmail.com'
+AUTHOR = 'Chris Birch'
+REQUIRES_PYTHON = '>=3.8.2'
+VERSION = __version__
 LICENSE = 'MIT'
 # What packages are required for this module to be executed?
 REQUIRED = [
@@ -27,7 +30,7 @@ REQUIRED = [
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-with io.open(os.path.join(here, 'README.rst'), encoding='utf-8') as f:
+with io.open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = '\n' + f.read()
 
 about = {}
@@ -84,7 +87,7 @@ setup(
     author_email=EMAIL,
     python_requires=REQUIRES_PYTHON,
     url=URL,
-    py_modules=['mypackage'],
+    # py_modules=['mypackage'],
 
     entry_points={
         'console_scripts': ['interview = cli:main'],
@@ -98,7 +101,7 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy'
     ],
