@@ -90,7 +90,7 @@ setup(
     # py_modules=['mypackage'],
 
     entry_points={
-        'console_scripts': ['interview = interview_questions.cli:main'],
+        'console_scripts': ['interview = interview_questions.interview_questions.cli:main'],
     },
     install_requires=REQUIRED,
     include_package_data=True,
