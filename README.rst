@@ -23,24 +23,26 @@
 	</p>
 
 
-## Description
+Description
+-----------
 
 This is a flash card interface, used for interview questions currently.
 
 
-## Features
+Features
+--------
 
 * Command line interface to display a new question each time the program is run
 
 
-## Future Features
+Future Features
+---------------
 
 * Program interface will be interactive
 * Move program to webpage using flask for better interface
 
-
-
-## How To Use
+How To Use
+----------
 
 .. code-block:: bash
 
@@ -48,11 +50,19 @@ This is a flash card interface, used for interview questions currently.
 	interview
 
 
-## Requirements
+Requirements
+------------
 
 *No special requirements!*
 
+Credits
+-------
 
-## License
+## Credits
 
-[MIT](https://tldrlegal.com/license/mit-license)
+`navdeep-G setup.py <https://github.com/navdeep-G/setup.py>'_
+
+License
+-------
+
+`MIT <https://tldrlegal.com/license/mit-license>`_

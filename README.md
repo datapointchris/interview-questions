@@ -56,6 +56,7 @@ interview
 
 ## Credits
 
+[navdeep-G setup.py](https://github.com/navdeep-G/setup.py)
 
 ## License
 

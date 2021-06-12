@@ -30,7 +30,7 @@ REQUIRED = [
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-with io.open(os.path.join(here, 'README.rst'), encoding='utf-8') as f:
+with io.open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = '\n' + f.read()
 
 about = {}
@@ -82,15 +82,16 @@ setup(
     name=NAME,
     version=about['__version__'],
     description=DESCRIPTION,
-    long_description='long_description',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     author=AUTHOR,
     author_email=EMAIL,
     python_requires=REQUIRES_PYTHON,
     url=URL,
-    # py_modules=['mypackage'],
+    packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*"]),
 
     entry_points={
-        'console_scripts': ['interview = interview_questions.interview_questions.cli:main'],
+        'console_scripts': ['interview=interview_questions.cli:main'],
     },
     install_requires=REQUIRED,
     include_package_data=True,
