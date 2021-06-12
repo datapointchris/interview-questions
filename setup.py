@@ -14,7 +14,7 @@ from setuptools import Command, find_packages, setup
 from interview_questions import __version__
 
 # Package meta-data.
-NAME = 'interview_questions'
+NAME = 'interview_star_questions'
 DESCRIPTION = '''Command Line Program that allows you to add, edit, and delete interview questions
                 and add related answers, notes and tips.'''
 URL = 'https://github.com/datapointchris/interview_questions'
