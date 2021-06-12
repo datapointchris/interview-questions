@@ -1,8 +1,7 @@
 """ This is the main entry point to this program, through the command line
 """
 
-from . import commands
-from . import defaults
+from . import commands, defaults
 from .menu import Menu, clear_screen
 from .printer import Printer
 
