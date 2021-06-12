@@ -1,11 +1,17 @@
-import commands
+""" This module houses the menu for the entire program, along with the `Option` helper class.
+"""
 import os
 import subprocess
 import sys
-import defaults
-from printer import Printer
+
+from .printer import Printer
+from . import commands
 
 printer = Printer()
+questions = commands.Questions()
+answers = commands.Answers()
+tips = commands.Tips()
+notes = commands.Notes()
 
 
 def clear_screen(return_data=None):
@@ -25,7 +31,6 @@ def reset_program(return_data=None):
         answers.reset_to_default(title=False)
         tips.reset_to_default(title=False)
         notes.reset_to_default(title=False)
-
     else:
         print('That was a close call!')
         print('\n\n')
@@ -191,34 +196,3 @@ class Menu:
         for key, option in submenu.items():
             print(f'{key} : {option.name}')
             print()
-
-
-# MAIN PROGRAM
-first_run = commands.check_for_first_run()
-
-questions = commands.Questions(defaults=defaults.default_questions)
-questions.create_table()
-
-answers = commands.Answers()
-answers.create_table()
-
-tips = commands.Tips()
-tips.create_table()
-
-notes = commands.Notes()
-notes.create_table()
-
-if first_run:
-    questions._populate_defaults()
-
-clear_screen()
-menu = Menu()
-
-menu.print_menu()
-return_data = None
-
-while True:
-    command = menu.get_command()
-    clear_screen()
-    return_data = command.execute(return_data=return_data)
-    menu.print_menu()

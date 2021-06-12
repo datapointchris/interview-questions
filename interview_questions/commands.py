@@ -1,7 +1,7 @@
 """ This module houses all of the commands for adding, editing, and deleting entries into the database.
 """
-from database import DatabaseManager
-from printer import Printer
+from .database import DatabaseManager
+from .printer import Printer
 
 db = DatabaseManager('interview.db')
 printer = Printer()
@@ -23,7 +23,13 @@ def get_valid_id(prompt, table_name):
 
 
 def validate_input(input_message, option_map):
-    """option_map should be a dictionary of mappings"""
+    """ Validate user input, retry on invalid input
+
+    Parameters
+    ----------
+    option_map : `dict`
+        Dictionary of key-value mappings of valid options
+    """
     choice = input(f'{input_message} ').upper()
     while choice not in option_map.keys():
         choice = input(f'{input_message} ').upper()

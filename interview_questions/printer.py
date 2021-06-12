@@ -5,6 +5,9 @@ class Printer:
         pass
 
     def print_title_bar(self, name):
+        """ Prints a centered title bar with variable length dependent
+            upon length of name.
+        """
         max_width = 80
         space = max_width - len(name) - 10
         left_pad = ('⎼' * (space // 2)) + (' ' * 5)
