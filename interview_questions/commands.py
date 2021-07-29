@@ -1,20 +1,22 @@
 """ This module houses all of the commands for adding, editing, and deleting entries into the database.
 """
 import pathlib
+from appdirs import AppDirs
 from .database import DatabaseManager
 from .printer import Printer
 
 db_name = 'interview.db'
-abspath = pathlib.Path().resolve()
-db_file_path = abspath / db_name
+dirs = AppDirs('interview-star-questions')
+data_path = pathlib.Path(dirs.user_data_dir)
+save_path = data_path.joinpath(db_name)
 
-db = DatabaseManager(db_file_path)
+db = DatabaseManager(save_path)
 printer = Printer()
 
 
 def check_for_first_run():
 
-    return (db.table_exists().fetchone()[0] == 0)
+    return db.table_exists().fetchone()[0] == 0
 
 
 def get_valid_id(prompt, table_name):
@@ -28,7 +30,7 @@ def get_valid_id(prompt, table_name):
 
 
 def validate_input(input_message, option_map):
-    """ Validate user input, retry on invalid input
+    """Validate user input, retry on invalid input
 
     Parameters
     ----------
@@ -41,7 +43,7 @@ def validate_input(input_message, option_map):
     return option_map.get(choice)
 
 
-class Command():
+class Command:
     """Base class for handling all common commands"""
 
     def __init__(self, defaults):
@@ -68,7 +70,7 @@ class Command():
         return None
 
     def delete_all(self, return_data=None):
-        """ Drop and re-create the table"""
+        """Drop and re-create the table"""
         printer.print_title_bar(f'Delete All {self.table_name}')
         self._drop_table()
         self.create_table()
@@ -77,7 +79,7 @@ class Command():
         return None
 
     def reset_to_default(self, return_data=None, title=True):
-        """ Drop and re-create the table, include defaults if available.
+        """Drop and re-create the table, include defaults if available.
 
         Parameters
         ----------
@@ -105,11 +107,14 @@ class Jobs(Command):  # this class and table isn't going to be used in v1.0
     """
 
     def create_table(self, data=None):
-        db.create_table('jobs', {
-            'id': 'integer primary key autoincrement',
-            'job': 'text not null',
-            'date_added': 'text'
-        })
+        db.create_table(
+            'jobs',
+            {
+                'id': 'integer primary key autoincrement',
+                'job': 'text not null',
+                'date_added': 'text',
+            },
+        )
 
     def view_practiced(self):
         db.select('jobs', criteria={'reviewed': True})
@@ -127,11 +132,14 @@ class Questions(Command):
         self.print_function = print_fuction
 
     def create_table(self):
-        db.create_table(self.table_name, {
-            'id': 'integer primary key autoincrement',
-            'question': 'text not null',
-            'answered': 'integer'
-        })
+        db.create_table(
+            self.table_name,
+            {
+                'id': 'integer primary key autoincrement',
+                'question': 'text not null',
+                'answered': 'integer',
+            },
+        )
 
     def get_random_question(self, return_data=None):
         printer.print_title_bar('Random Question')
@@ -160,7 +168,7 @@ class Questions(Command):
         return return_data
 
     def view_answered(self, return_data=None):
-        """ View only questions that have been marked as answered"""
+        """View only questions that have been marked as answered"""
         printer.print_title_bar('Answered Questions')
         cursor = db.select(self.table_name, criteria={'answered': 1})
         records = cursor.fetchall()
@@ -218,8 +226,14 @@ class Questions(Command):
             printer.print_records(record, self.print_function)
             edited_question = input('Enter the edited question: ')
             answered = validate_input(
-                f'Question is answered? (Currently: {"Y" if record[2] == 1 else "N"}), Y/N?', {'Y': 1, 'N': 0})
-            update_data = {'id': question_id, 'question': edited_question, 'answered': answered}
+                f'Question is answered? (Currently: {"Y" if record[2] == 1 else "N"}), Y/N?',
+                {'Y': 1, 'N': 0},
+            )
+            update_data = {
+                'id': question_id,
+                'question': edited_question,
+                'answered': answered,
+            }
             db.update(self.table_name, {'id': question_id}, update_data)
             edited_cursor = db.select(self.table_name, criteria={'id': question_id})
             edited_record = edited_cursor.fetchone()
@@ -232,13 +246,15 @@ class Questions(Command):
         return return_data
 
     def delete_question(self, return_data=None):
-        """ Deletes question and all associated answers, notes, and tips"""
+        """Deletes question and all associated answers, notes, and tips"""
         printer.print_title_bar('Delete by ID')
         if return_data is not None:
             question_id = return_data.get('return_id')
         else:
             question_id = input('ID to Delete: ')
-        question_cursor = db.select(table_name=self.table_name, criteria={'id': question_id})
+        question_cursor = db.select(
+            table_name=self.table_name, criteria={'id': question_id}
+        )
         question_record = question_cursor.fetchone()
         if question_record is not None:
             print('     WARNING     '.center(80, '!'))
@@ -291,7 +307,7 @@ class Questions(Command):
         return None
 
     def view_all_info(self, return_data=None, title=True):
-        """ View question and associated answers, notes, and tips."""
+        """View question and associated answers, notes, and tips."""
         if title:
             printer.print_title_bar('View All Question Info')
         question_id = return_data.get('return_id')
@@ -339,11 +355,14 @@ class Answers(Command):
         self.print_function = print_fuction
 
     def create_table(self):
-        db.create_table(self.table_name, {
-            'id': 'integer primary key autoincrement',
-            'question_id': 'integer not null',
-            'answer': 'text not null',
-        })
+        db.create_table(
+            self.table_name,
+            {
+                'id': 'integer primary key autoincrement',
+                'question_id': 'integer not null',
+                'answer': 'text not null',
+            },
+        )
 
     def view_answer_by_id(self, return_data=None):
         printer.print_title_bar('View by ID')
@@ -411,7 +430,11 @@ class Answers(Command):
             print(question_record[1])
             print()
             edited_answer = input('Enter the new answer: ')
-            update_data = {'id': answer_id, 'question_id': question_id, 'answer': edited_answer}
+            update_data = {
+                'id': answer_id,
+                'question_id': question_id,
+                'answer': edited_answer,
+            }
             db.update(self.table_name, {'id': answer_id}, update_data)
             edited_cursor = db.select(self.table_name, criteria={'id': answer_id})
             edited_record = edited_cursor.fetchone()
@@ -434,11 +457,14 @@ class Notes(Command):
         self.print_function = print_fuction
 
     def create_table(self):
-        db.create_table(self.table_name, {
-            'id': 'integer primary key autoincrement',
-            'question_id': 'integer not null',
-            'note': 'text not null',
-        })
+        db.create_table(
+            self.table_name,
+            {
+                'id': 'integer primary key autoincrement',
+                'question_id': 'integer not null',
+                'note': 'text not null',
+            },
+        )
 
     def view_note_by_id(self, return_data=None):
         printer.print_title_bar('View by ID')
@@ -526,11 +552,14 @@ class Tips(Command):
         self.print_function = print_fuction
 
     def create_table(self):
-        db.create_table(self.table_name, {
-            'id': 'integer primary key autoincrement',
-            'question_id': 'integer not null',
-            'tip': 'text not null',
-        })
+        db.create_table(
+            self.table_name,
+            {
+                'id': 'integer primary key autoincrement',
+                'question_id': 'integer not null',
+                'tip': 'text not null',
+            },
+        )
 
     def view_tip_by_id(self, return_data=None):
         printer.print_title_bar('View by ID')
