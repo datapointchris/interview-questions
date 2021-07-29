@@ -1,9 +1,14 @@
 """ This module houses all of the commands for adding, editing, and deleting entries into the database.
 """
+import pathlib
 from .database import DatabaseManager
 from .printer import Printer
 
-db = DatabaseManager('interview.db')
+db_name = 'interview.db'
+abspath = pathlib.Path().resolve()
+db_file_path = abspath / db_name
+
+db = DatabaseManager(db_file_path)
 printer = Printer()
 
 
