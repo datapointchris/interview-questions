@@ -130,6 +130,7 @@ class Menu:
                 '4': Option('Add a Tip to this Question', 'single_question', tips.add_tip),
                 'E': Option('Edit this Question', 'single_question', questions.edit_question),
                 'D': Option('Delete this Question', 'questions', questions.delete_question),
+                'A': Option('Get another Question', 'single_question', questions.get_random_question),
                 'R': Option('Return to Questions Menu', 'questions', clear_screen),
                 'M': Option('Return to Main Menu', 'main', clear_screen),
                 'Q': Option('Quit Program', 'main', exit_program)
