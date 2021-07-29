@@ -26,6 +26,7 @@ LICENSE = 'MIT'
 # What packages are required for this module to be executed?
 REQUIRED = [
     # 'requests', 'maya', 'records',
+    'appdirs'
 ]
 
 here = os.path.abspath(os.path.dirname(__file__))
