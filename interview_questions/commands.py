@@ -8,8 +8,8 @@ from .printer import Printer
 db_name = 'interview.db'
 dirs = AppDirs('interview-star-questions')
 data_path = pathlib.Path(dirs.user_data_dir)
+pathlib.Path.mkdir(data_path, exist_ok=True)
 save_path = data_path.joinpath(db_name)
-
 db = DatabaseManager(save_path)
 printer = Printer()
 
